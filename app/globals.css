@@ -1,26 +1,111 @@
-@import "tailwindcss";
+/* 📁 app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+.page-bg { background-color: #f8fafc; color: #0f172a; font-family: sans-serif; }
+.accent-color { color: #06b6d4; }
+
+/* 顶部 Dashboard */
+.top-dashboard { width: 85%; margin: 0 auto; padding-top: 3rem; padding-bottom: 2.5rem; }
+.main-title { font-size: 3rem; font-weight: 900; letter-spacing: -0.025em; color: #0f172a; }
+.sub-title { color: #64748b; margin-top: 0.5rem; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.control-panel { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1.5rem; align-items: flex-end; }
+@media (min-width: 768px) { .control-panel { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+.lang-switch { display: flex; background-color: #f1f5f9; padding: 0.25rem; border-radius: 0.5rem; width: max-content; }
+.lang-btn { padding: 0.5rem 1.5rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 700; color: #64748b; transition: all 0.2s; }
+.lang-btn:hover { color: #0f172a; }
+.lang-btn-active { background-color: white; color: #0891b2; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+
+.stats-card, .radar-card { background-color: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.stats-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.75rem; color: #64748b; font-size: 0.875rem; font-weight: 500; }
+.stats-number { font-size: 1.5rem; font-weight: 900; color: #0f172a; }
+.progress-track { width: 100%; height: 0.5rem; background-color: #f1f5f9; border-radius: 9999px; overflow: hidden; }
+.progress-bar { height: 100%; background-color: #06b6d4; transition: width 1s ease-out; }
+
+.radar-card { min-height: 92px; display: flex; flex-direction: column; justify-content: center; }
+.radar-header { display: flex; justify-content: space-between; align-items: center; height: 100%; }
+.radar-title { font-size: 0.875rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; }
+.radar-btn { background-color: #ecfeff; color: #0891b2; font-weight: 700; padding: 0.375rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; transition: background-color 0.2s; display: flex; align-items: center; gap: 0.5rem; }
+.radar-btn:hover { background-color: #cffafe; }
+.radar-result { font-size: 0.875rem; color: #334155; font-weight: 500; display: flex; align-items: center; line-height: 1.25; }
+
+/* =========================================
+   巨型表格与网格布局系统
+========================================= */
+.giant-matrix-table {
+  width: 85%;
+  margin: 0 auto;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-bottom: none; /* 防止双重边框 */
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* 核心：12列完美网格 */
+.table-grid-row {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr)); /* 分成12等份 */
+  gap: 0.75rem; /* 格子间距，想宽一点改成 1rem */
+  padding: 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.2s;
+}
+.table-grid-row:hover { background-color: #f8fafc; } /* 鼠标进入该年份区域，整体背景微变 */
+
+/* --- 1. 左侧年份区块 --- */
+.year-col-wrapper {
+  grid-column: 1 / 2;
+  /* grid-row 由 JSX 动态内联计算，所以这里不写 */
+}
+.year-cell {
+  aspect-ratio: 1 / 1; /* 保证是绝对的方形 */
+  display: flex; align-items: center; justify-content: center;
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+  font-size: 1.75rem; font-weight: 900; color: #94a3b8;
+  transition: all 0.2s;
+}
+.table-grid-row:hover .year-cell { color: #06b6d4; background-color: #ecfeff; }
+
+/* --- 2. 中间动画格子 --- */
+/* 这里不需要写 grid-column，因为 CSS 自动流会把它们塞进 2 到 11 列，直到满 10 个换行 */
+.anime-cell {
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0.5rem; border-radius: 0.5rem; border: 2px solid transparent;
+  cursor: pointer; overflow: hidden; user-select: none;
+  transition: all 0.2s ease-in-out;
+}
+.cell-text {
+  text-align: center; font-size: 0.875rem; line-height: 1.25;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* 带有微弹性的放大效果 */
+}
+.anime-cell:hover .cell-text {
+  transform: scale(1.18); /* 文字放大倍率 */
+  font-weight: 700;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 状态：未看过 */
+.cell-unselected { background-color: white; border-color: #e2e8f0; color: #475569; }
+.cell-unselected:hover { border-color: #67e8f9; background-color: #ecfeff; }
+
+/* 状态：看过 */
+.cell-selected {
+  background-color: #00E5FF; border-color: #00E5FF; color: #0f172a;
+  font-weight: 700; box-shadow: 0 0 15px rgba(0,229,255,0.4);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* --- 3. 右侧箭头区块 --- */
+.action-col-wrapper {
+  grid-column: 12 / 13;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px dashed #cbd5e1; 
+  border-radius: 0.5rem;
+  cursor: pointer; color: #94a3b8; transition: all 0.2s;
 }
+.action-col-wrapper:hover { background-color: #f1f5f9; color: #06b6d4; border-color: #06b6d4; }
+.action-col-empty { grid-column: 12 / 13; }

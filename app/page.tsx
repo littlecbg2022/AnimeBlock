@@ -17,50 +17,44 @@ const AnimeCell = ({ name, isWatched, onClick }: { name: string; isWatched: bool
 };
 
 /* =========================================
-   📅 表格行组件 (12列网格系统核心)
+   📅 表格行组件 (完全响应式重构)
 ========================================= */
 const YearRow = ({ group, lang, watchedIds, toggleWatched }: any) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
-  // 核心逻辑：默认展示 20 个（2行），展开后展示全部
+  // 默认展示 20 个，展开后展示全部
   const displayList = isExpanded ? group.list : group.list.slice(0, 20);
   const hasMore = group.list.length > 20;
 
-  // 计算当前这一年占据了多少行 (每行 10 个番剧)
-  const rowCount = Math.ceil(displayList.length / 10) || 1;
-
   return (
-    <div className="table-grid-row">
+    <div className="table-flex-row">
       
-      {/* 1. 第一列：年份 (占据第一格，但外壳跨越所有行，阻挡后续番剧掉入第一列) */}
-      <div className="year-col-wrapper" style={{ gridRow: `1 / span ${rowCount}` }}>
+      {/* 1. 左侧/顶部：年份 */}
+      <div className="year-col-wrapper">
         <div className="year-cell">
           {group.year}
         </div>
       </div>
 
-      {/* 2. 中间十列：番剧格子 (利用 CSS Grid 的自动流，它们会自动在第2列到第11列之间排列) */}
-      {displayList.map((anime: any) => (
-        <AnimeCell
-          key={anime.id}
-          name={anime[lang]}
-          isWatched={watchedIds.has(anime.id)}
-          onClick={() => toggleWatched(anime.id)}
-        />
-      ))}
+      {/* 2. 中间：番剧网格 (手机3列，电脑10列) */}
+      <div className="anime-grid-wrapper">
+        {displayList.map((anime: any) => (
+          <AnimeCell
+            key={anime.id}
+            name={anime[lang]}
+            isWatched={watchedIds.has(anime.id)}
+            onClick={() => toggleWatched(anime.id)}
+          />
+        ))}
+      </div>
 
-      {/* 3. 最后一列：下拉操作区 (跨越所有行) */}
+      {/* 3. 右侧/底部：展开按钮 */}
       {hasMore ? (
-        <div 
-          className="action-col-wrapper" 
-          style={{ gridRow: `1 / span ${rowCount}` }}
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          {isExpanded ? <ChevronUp size={36} /> : <ChevronDown size={36} />}
+        <div className="action-col-wrapper" onClick={() => setIsExpanded(!isExpanded)}>
+          {isExpanded ? <ChevronUp size={28} /> : <ChevronDown size={28} />}
         </div>
       ) : (
-        // 如果该年份少于20个，用空壳占位，保持阵列完整
-        <div className="action-col-empty" style={{ gridRow: `1 / span ${rowCount}` }} />
+        <div className="action-col-empty" />
       )}
 
     </div>

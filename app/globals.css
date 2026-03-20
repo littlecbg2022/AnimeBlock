@@ -33,79 +33,121 @@
 .radar-result { font-size: 0.875rem; color: #334155; font-weight: 500; display: flex; align-items: center; line-height: 1.25; }
 
 /* =========================================
-   巨型表格与网格布局系统
+   巨型表格与网格布局系统 (完美响应式版)
 ========================================= */
-.giant-matrix-table {
-  width: 85%;
+
+/* 手机端稍微加宽一点占满屏幕，电脑端保持 85% */
+.top-dashboard, .giant-matrix-table {
+  width: 95%;
   margin: 0 auto;
+}
+@media (min-width: 1024px) {
+  .top-dashboard, .giant-matrix-table { width: 85%; }
+}
+
+.giant-matrix-table {
   background-color: white;
   border: 1px solid #e2e8f0;
-  border-bottom: none; /* 防止双重边框 */
+  border-bottom: none; 
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
-/* 核心：12列完美网格 */
-.table-grid-row {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr)); /* 分成12等份 */
-  gap: 0.75rem; /* 格子间距，想宽一点改成 1rem */
-  padding: 1rem;
+/* 🚀 核心：移动端优先的 Flex 布局 */
+.table-flex-row {
+  display: flex;
+  flex-direction: column; /* 手机上：上下排布 */
   border-bottom: 1px solid #e2e8f0;
   transition: background-color 0.2s;
 }
-.table-grid-row:hover { background-color: #f8fafc; } /* 鼠标进入该年份区域，整体背景微变 */
 
-/* --- 1. 左侧年份区块 --- */
+/* --- 1. 年份区块 (手机版) --- */
 .year-col-wrapper {
-  grid-column: 1 / 2;
-  /* grid-row 由 JSX 动态内联计算，所以这里不写 */
+  padding: 1rem 1rem 0 1rem;
+  display: flex; justify-content: flex-start;
 }
 .year-cell {
-  aspect-ratio: 1 / 1; /* 保证是绝对的方形 */
-  display: flex; align-items: center; justify-content: center;
-  background-color: #f1f5f9;
-  border-radius: 0.5rem;
-  font-size: 1.75rem; font-weight: 900; color: #94a3b8;
+  background-color: #f1f5f9; border-radius: 0.5rem;
+  padding: 0.25rem 1rem;
+  font-size: 1.25rem; font-weight: 900; color: #94a3b8;
   transition: all 0.2s;
 }
-.table-grid-row:hover .year-cell { color: #06b6d4; background-color: #ecfeff; }
 
-/* --- 2. 中间动画格子 --- */
-/* 这里不需要写 grid-column，因为 CSS 自动流会把它们塞进 2 到 11 列，直到满 10 个换行 */
-.anime-cell {
-  aspect-ratio: 1 / 1;
+/* --- 2. 动画网格 (手机版：1行3个) --- */
+.anime-grid-wrapper {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 手机屏幕小，只排3列 */
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+/* --- 3. 按钮区块 (手机版) --- */
+.action-col-wrapper {
   display: flex; align-items: center; justify-content: center;
-  padding: 0.5rem; border-radius: 0.5rem; border: 2px solid transparent;
-  cursor: pointer; overflow: hidden; user-select: none;
-  transition: all 0.2s ease-in-out;
+  padding: 0.5rem; margin: 0 1rem 1rem 1rem;
+  border: 2px dashed #cbd5e1; border-radius: 0.5rem;
+  cursor: pointer; color: #94a3b8; transition: all 0.2s;
+}
+.action-col-empty { display: none; } /* 手机上如果没有按钮，直接隐藏不占位 */
+
+
+/* 💻 电脑端覆盖逻辑 (当屏幕宽度 > 768px 时，自动变回巨型矩阵) */
+@media (min-width: 768px) {
+  .table-flex-row {
+    flex-direction: row; /* 变回横向排布 */
+    padding: 0;
+  }
+  .table-flex-row:hover { background-color: #f8fafc; }
+
+  /* 恢复左侧年份 */
+  .year-col-wrapper {
+    width: 6rem; flex-shrink: 0; padding: 1rem;
+    border-right: 1px solid #e2e8f0;
+    justify-content: center; align-items: stretch;
+  }
+  .year-cell {
+    width: 100%; display: flex; align-items: center; justify-content: center;
+    aspect-ratio: 1 / 1; padding: 0; font-size: 1.75rem;
+  }
+  .table-flex-row:hover .year-cell { color: #06b6d4; background-color: #ecfeff; }
+
+  /* 恢复10列网格 */
+  .anime-grid-wrapper {
+    grid-template-columns: repeat(10, minmax(0, 1fr)); /* 电脑上强制10列 */
+    gap: 0.75rem;
+  }
+
+  /* 恢复右侧按钮 */
+  .action-col-wrapper {
+    width: 4rem; flex-shrink: 0; margin: 0; padding: 0;
+    border: none; border-left: 1px solid #e2e8f0; border-radius: 0;
+  }
+  .action-col-wrapper:hover { background-color: #f1f5f9; color: #06b6d4; }
+  .action-col-empty {
+    display: block; width: 4rem; flex-shrink: 0; border-left: 1px solid #e2e8f0;
+  }
+}
+
+/* 格子内部文字针对手机缩小一点，防溢出 */
+.anime-cell {
+  aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  padding: 0.25rem; border-radius: 0.5rem; border: 2px solid transparent;
+  cursor: pointer; overflow: hidden; user-select: none; transition: all 0.2s;
 }
 .cell-text {
-  text-align: center; font-size: 0.875rem; line-height: 1.25;
+  text-align: center; font-size: 0.75rem; line-height: 1.2;
   display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); /* 带有微弹性的放大效果 */
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.anime-cell:hover .cell-text {
-  transform: scale(1.18); /* 文字放大倍率 */
-  font-weight: 700;
-}
+@media (min-width: 768px) {
+  .anime-cell { padding: 0.5rem; }
+  .cell-text { font-size: 0.875rem; }
+} 
 
-/* 状态：未看过 */
+.anime-cell:hover .cell-text { transform: scale(1.18); font-weight: 700; }
 .cell-unselected { background-color: white; border-color: #e2e8f0; color: #475569; }
 .cell-unselected:hover { border-color: #67e8f9; background-color: #ecfeff; }
-
-/* 状态：看过 */
 .cell-selected {
   background-color: #00E5FF; border-color: #00E5FF; color: #0f172a;
   font-weight: 700; box-shadow: 0 0 15px rgba(0,229,255,0.4);
 }
-
-/* --- 3. 右侧箭头区块 --- */
-.action-col-wrapper {
-  grid-column: 12 / 13;
-  display: flex; align-items: center; justify-content: center;
-  border: 2px dashed #cbd5e1; 
-  border-radius: 0.5rem;
-  cursor: pointer; color: #94a3b8; transition: all 0.2s;
-}
-.action-col-wrapper:hover { background-color: #f1f5f9; color: #06b6d4; border-color: #06b6d4; }
-.action-col-empty { grid-column: 12 / 13; }

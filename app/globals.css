@@ -1,153 +1,207 @@
-/* 📁 app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.page-bg { background-color: #f8fafc; color: #0f172a; font-family: sans-serif; }
-.accent-color { color: #06b6d4; }
+/* =========================================
+   🌍 1. 全局基础与配色 (Global Basics)
+========================================= */
+.page-bg { 
+  background-color: #f8fafc; 
+  color: #0f172a; 
+  font-family: sans-serif; 
+}
+.accent-color { 
+  color: #06b6d4; 
+}
 
-/* 顶部 Dashboard */
-.top-dashboard { width: 85%; margin: 0 auto; padding-top: 3rem; padding-bottom: 2.5rem; }
+/* =========================================
+   📊 2. 顶部仪表盘 (Top Dashboard)
+========================================= */
+.top-dashboard { width: 95%; margin: 0 auto; padding-top: 3rem; padding-bottom: 2.5rem; }
+@media (min-width: 1024px) { .top-dashboard { width: 85%; } }
+
 .main-title { font-size: 3rem; font-weight: 900; letter-spacing: -0.025em; color: #0f172a; }
 .sub-title { color: #64748b; margin-top: 0.5rem; font-size: 0.875rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; }
 
 .control-panel { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 1.5rem; align-items: flex-end; }
 @media (min-width: 768px) { .control-panel { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
+/* 语言切换 */
 .lang-switch { display: flex; background-color: #f1f5f9; padding: 0.25rem; border-radius: 0.5rem; width: max-content; }
 .lang-btn { padding: 0.5rem 1.5rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 700; color: #64748b; transition: all 0.2s; }
 .lang-btn:hover { color: #0f172a; }
 .lang-btn-active { background-color: white; color: #0891b2; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
+/* 数据卡片 */
 .stats-card, .radar-card { background-color: white; border: 1px solid #e2e8f0; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 .stats-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 0.75rem; color: #64748b; font-size: 0.875rem; font-weight: 500; }
 .stats-number { font-size: 1.5rem; font-weight: 900; color: #0f172a; }
 .progress-track { width: 100%; height: 0.5rem; background-color: #f1f5f9; border-radius: 9999px; overflow: hidden; }
 .progress-bar { height: 100%; background-color: #06b6d4; transition: width 1s ease-out; }
 
+/* 雷达卡片 */
 .radar-card { min-height: 92px; display: flex; flex-direction: column; justify-content: center; }
 .radar-header { display: flex; justify-content: space-between; align-items: center; height: 100%; }
 .radar-title { font-size: 0.875rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.5rem; }
 .radar-btn { background-color: #ecfeff; color: #0891b2; font-weight: 700; padding: 0.375rem 1rem; border-radius: 0.375rem; font-size: 0.875rem; transition: background-color 0.2s; display: flex; align-items: center; gap: 0.5rem; }
 .radar-btn:hover { background-color: #cffafe; }
-.radar-result { font-size: 0.875rem; color: #334155; font-weight: 500; display: flex; align-items: center; line-height: 1.25; }
+.radar-result-item { font-size: 0.8rem; color: #334155; font-weight: 600; line-height: 1.25; margin-bottom: 2px; }
+
 
 /* =========================================
-   巨型表格与网格布局系统 (完美响应式版)
+   🗄️ 3. 巨型矩阵表格布局 (Matrix Grid Layout)
 ========================================= */
+.giant-matrix-table { width: 95%; margin: 0 auto; background-color: white; border: 1px solid #e2e8f0; border-bottom: none; border-radius: 0.5rem 0.5rem 0 0; }
+@media (min-width: 1024px) { .giant-matrix-table { width: 85%; } }
 
-/* 手机端稍微加宽一点占满屏幕，电脑端保持 85% */
-.top-dashboard, .giant-matrix-table {
-  width: 95%;
-  margin: 0 auto;
-}
-@media (min-width: 1024px) {
-  .top-dashboard, .giant-matrix-table { width: 85%; }
-}
+.table-flex-row { display: flex; flex-direction: column; border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s; }
+.year-col-wrapper { padding: 1rem 1rem 0 1rem; display: flex; justify-content: flex-start; }
+.year-cell { background-color: #f1f5f9; border-radius: 0.5rem; padding: 0.25rem 1rem; font-size: 1.25rem; font-weight: 900; color: #94a3b8; }
+.anime-grid-wrapper { flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; padding: 1rem; }
+.action-col-wrapper { display: flex; align-items: center; justify-content: center; padding: 0.5rem; margin: 0 1rem 1rem 1rem; border: 2px dashed #cbd5e1; border-radius: 0.5rem; cursor: pointer; color: #94a3b8; transition: all 0.2s; }
+.action-col-empty { display: none; }
 
-.giant-matrix-table {
-  background-color: white;
-  border: 1px solid #e2e8f0;
-  border-bottom: none; 
-  border-radius: 0.5rem 0.5rem 0 0;
-}
-
-/* 🚀 核心：移动端优先的 Flex 布局 */
-.table-flex-row {
-  display: flex;
-  flex-direction: column; /* 手机上：上下排布 */
-  border-bottom: 1px solid #e2e8f0;
-  transition: background-color 0.2s;
-}
-
-/* --- 1. 年份区块 (手机版) --- */
-.year-col-wrapper {
-  padding: 1rem 1rem 0 1rem;
-  display: flex; justify-content: flex-start;
-}
-.year-cell {
-  background-color: #f1f5f9; border-radius: 0.5rem;
-  padding: 0.25rem 1rem;
-  font-size: 1.25rem; font-weight: 900; color: #94a3b8;
-  transition: all 0.2s;
-}
-
-/* --- 2. 动画网格 (手机版：1行3个) --- */
-.anime-grid-wrapper {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)); /* 手机屏幕小，只排3列 */
-  gap: 0.5rem;
-  padding: 1rem;
-}
-
-/* --- 3. 按钮区块 (手机版) --- */
-.action-col-wrapper {
-  display: flex; align-items: center; justify-content: center;
-  padding: 0.5rem; margin: 0 1rem 1rem 1rem;
-  border: 2px dashed #cbd5e1; border-radius: 0.5rem;
-  cursor: pointer; color: #94a3b8; transition: all 0.2s;
-}
-.action-col-empty { display: none; } /* 手机上如果没有按钮，直接隐藏不占位 */
-
-
-/* 💻 电脑端覆盖逻辑 (当屏幕宽度 > 768px 时，自动变回巨型矩阵) */
 @media (min-width: 768px) {
-  .table-flex-row {
-    flex-direction: row; /* 变回横向排布 */
-    padding: 0;
-  }
+  .table-flex-row { flex-direction: row; padding: 0; }
   .table-flex-row:hover { background-color: #f8fafc; }
-
-  /* 恢复左侧年份 */
-  .year-col-wrapper {
-    width: 6rem; flex-shrink: 0; padding: 1rem;
-    border-right: 1px solid #e2e8f0;
-    justify-content: center; align-items: stretch;
-  }
-  .year-cell {
-    width: 100%; display: flex; align-items: center; justify-content: center;
-    aspect-ratio: 1 / 1; padding: 0; font-size: 1.75rem;
-  }
+  .year-col-wrapper { width: 6rem; flex-shrink: 0; padding: 1rem; border-right: 1px solid #e2e8f0; justify-content: center; align-items: stretch; }
+  .year-cell { width: 100%; display: flex; align-items: center; justify-content: center; aspect-ratio: 1 / 1; padding: 0; font-size: 1.75rem; }
   .table-flex-row:hover .year-cell { color: #06b6d4; background-color: #ecfeff; }
-
-  /* 恢复10列网格 */
-  .anime-grid-wrapper {
-    grid-template-columns: repeat(10, minmax(0, 1fr)); /* 电脑上强制10列 */
-    gap: 0.75rem;
-  }
-
-  /* 恢复右侧按钮 */
-  .action-col-wrapper {
-    width: 4rem; flex-shrink: 0; margin: 0; padding: 0;
-    border: none; border-left: 1px solid #e2e8f0; border-radius: 0;
-  }
+  .anime-grid-wrapper { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 0.75rem; }
+  .action-col-wrapper { width: 4rem; flex-shrink: 0; margin: 0; padding: 0; border: none; border-left: 1px solid #e2e8f0; border-radius: 0; }
   .action-col-wrapper:hover { background-color: #f1f5f9; color: #06b6d4; }
-  .action-col-empty {
-    display: block; width: 4rem; flex-shrink: 0; border-left: 1px solid #e2e8f0;
-  }
+  .action-col-empty { display: block; width: 4rem; flex-shrink: 0; border-left: 1px solid #e2e8f0; }
 }
 
-/* 格子内部文字针对手机缩小一点，防溢出 */
+
+/* =========================================
+   🧱 4. 番剧基础格子与交互 (Anime Cell & Hover Card)
+========================================= */
+/* 基础格子 */
 .anime-cell {
-  aspect-ratio: 1 / 1; display: flex; align-items: center; justify-content: center;
+  position: relative; 
+  aspect-ratio: 1 / 1; 
+  display: flex; align-items: center; justify-content: center;
   padding: 0.25rem; border-radius: 0.5rem; border: 2px solid transparent;
-  cursor: pointer; overflow: hidden; user-select: none; transition: all 0.2s;
+  cursor: pointer; 
+  overflow: visible !important; /* 确保浮窗溢出可见 */
+  user-select: none; transition: all 0.2s;
 }
+@media (min-width: 768px) { .anime-cell { padding: 0.5rem; } }
+
 .cell-text {
   text-align: center; font-size: 0.75rem; line-height: 1.2;
-  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; 
+  overflow: hidden; 
+  color: #475569; font-weight: 500; transition: color 0.2s;
 }
-@media (min-width: 768px) {
-  .anime-cell { padding: 0.5rem; }
-  .cell-text { font-size: 0.875rem; }
-} 
+@media (min-width: 768px) { .cell-text { font-size: 0.875rem; } }
 
-.anime-cell:hover .cell-text { transform: scale(1.18); font-weight: 700; }
-.cell-unselected { background-color: white; border-color: #e2e8f0; color: #475569; }
-.cell-unselected:hover { border-color: #67e8f9; background-color: #ecfeff; }
-.cell-selected {
-  background-color: #00E5FF; border-color: #00E5FF; color: #0f172a;
-  font-weight: 700; box-shadow: 0 0 15px rgba(0,229,255,0.4);
+/* 选中状态 */
+.cell-unselected { background-color: white; border-color: #e2e8f0; }
+.cell-selected { background-color: #00E5FF; border-color: #00E5FF; color: #0f172a; box-shadow: 0 0 15px rgba(0,229,255,0.4); }
+.cell-selected .cell-text { color: #0f172a; font-weight: 700; }
+
+/* 封印状态 */
+.banned-cell { background-color: #0a0a0a !important; border-color: #1f1f1f !important; cursor: not-allowed !important; pointer-events: none; }
+.banned-text { color: #333333; font-family: monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; }
+
+/* 物理锁定解密按钮 */
+.cell-decrypt-btn {
+  position: absolute; right: 8px; top: 8px; z-index: 30;
+  display: flex; align-items: center; gap: 4px; padding: 4px 10px;
+  border-radius: 9999px; font-size: 11px; font-weight: bold;
+  background-color: rgba(0, 0, 0, 0.6); color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.5); backdrop-filter: blur(4px);
+  cursor: pointer; transition: all 0.2s;
+}
+.cell-decrypt-btn:hover { background-color: #06b6d4; color: #000; box-shadow: 0 0 15px rgba(6, 182, 212, 0.8); }
+
+/* 赛博浮窗卡片本体 */
+.anime-hover-card {
+  position: absolute; inset: -12px; z-index: 50; 
+  border-radius: 0.75rem; overflow: hidden; 
+  background-color: #0a0a0a; border: 2px solid rgba(6, 182, 212, 0.5); 
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4), 0 0 40px rgba(6, 182, 212, 0.2); 
+  opacity: 0; pointer-events: none; 
+  transform: scale(0.8) translateY(10px); 
+  transition: opacity 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  -webkit-backface-visibility: hidden; backface-visibility: hidden; transform-style: preserve-3d;
+}
+
+.anime-cell:hover:not(.banned-cell) .anime-hover-card {
+  opacity: 1; pointer-events: auto; transform: scale(1) translateY(0px) translateZ(0); 
+}
+
+/* 浮窗海报与文字叠加 */
+.hover-card-image { position: absolute; inset: 0; z-index: 5; transition: all 0.3s; }
+.anime-cell:hover .hover-card-image img { filter: brightness(0.4) saturate(1.2); transform: scale(1.05); }
+
+.hover-card-text-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; padding: 0.75rem 0.5rem;
+  background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.4), transparent);
+  border-top: 1px solid rgba(6, 182, 212, 0.2);
+}
+.hover-card-title {
+  display: block; text-align: center; color: white; font-weight: 700; font-size: 0.8rem; line-height: 1.25;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  text-shadow: 0 0 5px rgba(255,255,255,0.8);
+}
+
+
+/* =========================================
+   🪟 5. 详情弹窗与警告组件 (Modals)
+========================================= */
+/* 背景遮罩 */
+.modal-backdrop-clean {
+  position: fixed; inset: 0; z-index: 100; 
+  background-color: rgba(0, 0, 0, 0.25); backdrop-filter: blur(3px); 
+  display: flex; align-items: center; justify-content: center; padding: 1rem; 
+  transition: all 0.3s ease;
+}
+
+/* 弹窗滑入动画 */
+@keyframes detail-pop { 
+  from { transform: scale(0.95) translateY(10px); opacity: 0; } 
+  to { transform: scale(1) translateY(0); opacity: 1; } 
+}
+
+/* 弹窗主容器：左图右文结构 */
+.detail-modal-box {
+  position: relative; display: flex; flex-direction: row; 
+  background-color: #ffffff; border-radius: 1rem; overflow: hidden;
+  width: 90vw; max-width: 1000px; height: 70vh; min-height: 550px; max-height: 800px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: detail-pop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 右上角关闭按钮 */
+.modal-close-btn {
+  position: absolute; right: 20px; top: 20px; z-index: 50;
+  padding: 0.5rem; border-radius: 50%; background-color: rgba(0, 0, 0, 0.05);
+  color: #64748b; border: none; cursor: pointer; transition: all 0.2s;
+}
+.modal-close-btn:hover { background-color: rgba(0, 0, 0, 0.15); color: #0f172a; }
+
+/* 弹窗内资料区细节样式 */
+.modal-rating-block { background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 1rem 1.25rem; border-radius: 1rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.modal-info-header { font-size: 14px; font-weight: 800; color: #1e293b; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; border-left: 3px solid #06b6d4; padding-left: 10px; text-shadow: 0 0 10px rgba(6,182,212,0.1); }
+.modal-summary-text { color: #475569; font-size: 14px; line-height: 1.75; font-feature-settings: "ss01", "ss03"; }
+
+/* 五星进度条控制 */
+.star-unit { position: relative; color: #e2e8f0; display: flex; } 
+.star-fill { color: #fbbf24; position: absolute; top: 0; left: 0; bottom: 0; overflow: hidden; display: flex; }
+
+/* 赛博标签 */
+.cyber-tag {
+  background-color: #000; color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.4);
+  font-family: monospace; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: bold;
+  text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s;
+}
+.cyber-tag:hover { background-color: #22d3ee; color: #000; box-shadow: 0 0 10px rgba(34, 211, 238, 0.7); }
+
+/* 安全跳转小弹窗 */
+.security-modal-content {
+  background-color: white; border-radius: 1rem; padding: 2rem; width: 100%; max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2); animation: detail-pop 0.3s ease-out;
 }

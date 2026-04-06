@@ -1,6 +1,6 @@
 // 📁 app/layout.tsx
 import type { Metadata } from 'next'
-import './globals.css' // 👈 就是这一行！极其重要，缺少它就没有任何样式
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Anime Block | 补番记录台',
@@ -13,8 +13,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="zh">
-      <body>{children}</body>
+    // 💡 加上 suppressHydrationWarning，无视浏览器插件的干扰
+    <html lang="zh" suppressHydrationWarning>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   )
 }

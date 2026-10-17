@@ -19,7 +19,6 @@ function cleanTitle(value: string): string {
     ' ',
   );
   title = title.replace(/\s+[^\s]{2,8}篇\s*$/g, ' ');
-  title = title.replace(/[!?！？★☆]/g, ' ');
   title = title.replace(/\s+/g, ' ').trim();
 
   const parts = title.split(/\s*[:：\-–—|·]\s*/);
@@ -27,7 +26,7 @@ function cleanTitle(value: string): string {
     title = parts[0].trim();
   }
 
-  return title.replace(/[、,，.。:：;；'"“”‘’]/g, ' ').replace(/\s+/g, ' ').trim();
+  return title.replace(/\s+/g, ' ').trim();
 }
 
 export interface SearchTitles {

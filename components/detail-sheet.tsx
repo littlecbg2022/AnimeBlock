@@ -15,6 +15,7 @@ import {
   hasLocalizedSummary,
   isMachineSummary,
 } from '@/lib/catalog';
+import { getSearchTitles } from '@/lib/search';
 import { formatInt, formatScore } from '@/lib/format';
 import { useDialog } from '@/lib/use-dialog';
 
@@ -83,19 +84,48 @@ export function DetailSheet({
 
   const qZh = anime ? encodeURIComponent(anime.zh) : '';
   const qEn = anime ? encodeURIComponent(anime.en || anime.zh) : '';
+  const searchTitles = anime ? getSearchTitles(anime, lang) : null;
+  const agedmQuery = searchTitles
+    ? Array.from(searchTitles.base).length <= 8
+      ? searchTitles.base
+      : searchTitles.short
+    : '';
+  const omofunQuery = searchTitles?.base || '';
 
   const thirdPartyWatchLinks = anime
     ? [
         {
           label: t.watchAgedm,
-          url: `https://www.agedm.io/search?query=${qZh}`,
+          url: `https://www.agedm.io/search?query=${encodeURIComponent(agedmQuery)}`,
         },
         {
           label: t.watchOmofuna,
-          url: `https://www.omofuna.com/search/-------------.html?wd=${qZh}`,
+          url: `https://www.omofuna.com/search/-------------.html?wd=${encodeURIComponent(omofunQuery)}`,
         },
       ]
     : [];
+
+  const searchVariants =
+    anime && searchTitles
+      ? [
+          {
+            label: `AGE · ${t.searchFull}`,
+            url: `https://www.agedm.io/search?query=${encodeURIComponent(searchTitles.fullChinese)}`,
+          },
+          {
+            label: `OmoFun · ${t.searchFull}`,
+            url: `https://www.omofuna.com/search/-------------.html?wd=${encodeURIComponent(searchTitles.fullChinese)}`,
+          },
+          {
+            label: `OmoFun · ${t.searchJapanese}`,
+            url: `https://www.omofuna.com/search/-------------.html?wd=${encodeURIComponent(searchTitles.japanese)}`,
+          },
+          {
+            label: t.searchBing,
+            url: `https://www.bing.com/search?q=site%3Aagedm.io+${encodeURIComponent(searchTitles.base)}`,
+          },
+        ]
+      : [];
 
   const officialFreeWatchLinks = anime
     ? [
@@ -317,6 +347,23 @@ export function DetailSheet({
                   </button>
                 ))}
               </div>
+              {searchVariants.length ? (
+                <details className="search-variants">
+                  <summary>{t.searchFallback}</summary>
+                  <div className="search-variant-row">
+                    {searchVariants.map((link) => (
+                      <button
+                        key={link.label}
+                        type="button"
+                        className="source-link"
+                        onClick={() => onExternal(link.url)}
+                      >
+                        {link.label} <ExternalLink size={10} aria-hidden="true" />
+                      </button>
+                    ))}
+                  </div>
+                </details>
+              ) : null}
             </div>
 
             <details className="watch-section watch-official-free">

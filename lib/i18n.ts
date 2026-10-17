@@ -67,6 +67,10 @@ export interface Messages {
   watchPaidTitle: string;
   watchAgedm: string;
   watchOmofuna: string;
+  searchFallback: string;
+  searchFull: string;
+  searchJapanese: string;
+  searchBing: string;
   watchYoutube: string;
   watchMuseAsia: string;
   watchAniOne: string;
@@ -199,6 +203,10 @@ const zh: Messages = {
   watchPaidTitle: '正版平台',
   watchAgedm: 'AGE 动漫',
   watchOmofuna: 'OmoFun',
+  searchFallback: '搜不到？换关键词',
+  searchFull: '全名',
+  searchJapanese: '日文名',
+  searchBing: 'Bing 站内搜索',
   watchYoutube: 'YouTube 官方',
   watchMuseAsia: 'Muse Asia',
   watchAniOne: 'Ani-One Asia',
@@ -327,6 +335,10 @@ const en: Messages = {
   watchPaidTitle: 'Official platforms',
   watchAgedm: 'AGE Anime',
   watchOmofuna: 'OmoFun',
+  searchFallback: 'No result? Try another query',
+  searchFull: 'full title',
+  searchJapanese: 'Japanese title',
+  searchBing: 'Bing site search',
   watchYoutube: 'YouTube official',
   watchMuseAsia: 'Muse Asia',
   watchAniOne: 'Ani-One Asia',
@@ -454,6 +466,10 @@ const ja: Messages = {
   watchPaidTitle: '公式配信',
   watchAgedm: 'AGE アニメ',
   watchOmofuna: 'OmoFun',
+  searchFallback: '見つからない場合は別の語で',
+  searchFull: '正式名',
+  searchJapanese: '日本語名',
+  searchBing: 'Bing サイト内検索',
   watchYoutube: 'YouTube 公式',
   watchMuseAsia: 'Muse Asia',
   watchAniOne: 'Ani-One Asia',

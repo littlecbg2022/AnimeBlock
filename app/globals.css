@@ -3157,6 +3157,43 @@ details[open] > summary.watch-section-title::before {
   letter-spacing: 0.08em;
 }
 
+.search-variants {
+  margin-top: 8px;
+}
+
+.search-variants > summary {
+  cursor: pointer;
+  list-style: none;
+  color: #8a5a12;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.search-variants > summary::-webkit-details-marker {
+  display: none;
+}
+
+.search-variants > summary::before {
+  content: '+ ';
+}
+
+.search-variants[open] > summary::before {
+  content: '− ';
+}
+
+.search-variant-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+.search-variant-row .source-link {
+  height: 28px;
+  padding: 0 8px;
+  font-size: 9.5px;
+}
+
 .watch-third .source-link,
 .watch-third .third-link {
   border-color: rgba(183, 121, 31, 0.3);

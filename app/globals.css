@@ -3468,3 +3468,73 @@ dialog.modal {
     text-align: center;
   }
 }
+
+/* ------------------------------------------------------------------ */
+/* Typography scale                                                    */
+/* ------------------------------------------------------------------ */
+
+body {
+  font-size: 15px;
+}
+
+.eyebrow { font-size: 9.5px; }
+.brand-copy small { font-size: 9px; }
+.header-progress-numbers { font-size: 10px; }
+.header-progress-numbers span { font-size: 9px; }
+.search input { font-size: 12.5px; }
+.chip { font-size: 10px; }
+.lang-btn { font-size: 10px; }
+.hero-meta { font-size: 10px; }
+.hero-note { font-size: 8.5px; }
+.plate-count { font-size: 9.5px; }
+.plate-year { font-size: 8px; }
+.plate-info { font-size: 9px; }
+.plate-legend { font-size: 8.5px; }
+.radar-strip-title { font-size: 13px; }
+.radar-strip-meta { font-size: 9px; }
+.radar-strip-score { font-size: 9.5px; }
+.radar-strip-rank { font-size: 9px; }
+.radar-strip-more { font-size: 9px; }
+.archive-head > .eyebrow { font-size: 10px; }
+.sort-btn { font-size: 10px; }
+.archive-count { font-size: 10px; }
+.year-status { font-size: 9px; }
+.year-count { font-size: 10px; }
+.year-expand { font-size: 10px; }
+.cell-title { font-size: 12.5px; }
+.cell-sealed-text { font-size: 9px; }
+.preview-sub { font-size: 11px; }
+.preview-native { font-size: 10px; }
+.preview-tags span { font-size: 10px; }
+.preview-summary { font-size: 13.5px; }
+.preview-hint { font-size: 9px; }
+.detail-native { font-size: 10px; }
+.detail-meta { font-size: 9.5px; }
+.detail-section-label { font-size: 9.5px; }
+.detail-source, .mt-badge { font-size: 8.5px; }
+.tag { font-size: 9.5px; }
+.detail-summary-text { font-size: 14px; }
+.detail-note { font-size: 10px; }
+.btn { font-size: 10px; }
+.text-btn { font-size: 9.5px; }
+.source-link { font-size: 10px; }
+.watch-section-title { font-size: 10px; }
+.watch-note { font-size: 11px; }
+.radar-refresh { font-size: 9px; }
+.radar-item-top strong { font-size: 13px; }
+.radar-item-top em { font-size: 9px; }
+.radar-reason { font-size: 9.5px; }
+.radar-tags span { font-size: 8.5px; }
+.radar-empty p { font-size: 10px; }
+.settings-row h3 { font-size: 13px; }
+.settings-row p { font-size: 10px; }
+.settings-sources .link-row { font-size: 9px; }
+.external-intro, .external-body { font-size: 10px; }
+.external-target { font-size: 9px; }
+.modal-head .dim { font-size: 9px; }
+.footer-note { font-size: 9.5px; }
+.footer-meta { font-size: 9px; }
+.empty-state p { font-size: 10px; }
+.toast { font-size: 10px; }
+.icon-btn[data-tooltip]::after { font-size: 9px; }
+.third-badge { font-size: 8px; }

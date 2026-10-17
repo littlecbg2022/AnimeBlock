@@ -41,6 +41,82 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+const CN_DIGITS: Record<string, number> = {
+  一: 1,
+  二: 2,
+  三: 3,
+  四: 4,
+  五: 5,
+  六: 6,
+  七: 7,
+  八: 8,
+  九: 9,
+  十: 10,
+};
+
+const ROMAN_SEASONS: Record<string, number> = {
+  II: 2,
+  III: 3,
+  IV: 4,
+  V: 5,
+  VI: 6,
+  VII: 7,
+  VIII: 8,
+  IX: 9,
+  X: 10,
+  'Ⅱ': 2,
+  'Ⅲ': 3,
+  'Ⅳ': 4,
+  'Ⅴ': 5,
+  'Ⅵ': 6,
+  'Ⅶ': 7,
+  'Ⅷ': 8,
+  'Ⅸ': 9,
+  'Ⅹ': 10,
+};
+
+function chineseNumber(value: string): number {
+  if (/^\d+$/.test(value)) return Number(value);
+  if (value === '十') return 10;
+  if (value.startsWith('十')) return 10 + (CN_DIGITS[value[1]] || 0);
+  if (value.endsWith('十')) return (CN_DIGITS[value[0]] || 0) * 10;
+  if (value.includes('十')) {
+    const [tens, ones] = value.split('十');
+    return (CN_DIGITS[tens] || 1) * 10 + (CN_DIGITS[ones] || 0);
+  }
+  return CN_DIGITS[value] || 0;
+}
+
+function detectSeasonNumber(value: string): number {
+  if (/final\s+season|最终季|最終シーズン|完結編|最终章|final\s+chapter/i.test(value)) {
+    return 99;
+  }
+
+  let season = 0;
+  const patterns: Array<[RegExp, (match: RegExpMatchArray) => number]> = [
+    [/第\s*([一二三四五六七八九十\d]+)\s*[季期部篇]/, (match) => chineseNumber(match[1])],
+    [/\bseason\s*([0-9]+)\b/i, (match) => Number(match[1])],
+    [/\b([0-9]+)(?:st|nd|rd|th)\s+season\b/i, (match) => Number(match[1])],
+    [/\bS([0-9]+)\b/i, (match) => Number(match[1])],
+    [/\bpart\s*([0-9]+)\b/i, (match) => Number(match[1])],
+    [/\b(II|III|IV|V|VI|VII|VIII|IX|X)\b/, (match) => ROMAN_SEASONS[match[1]] || 0],
+    [/[ⅡⅢⅣⅤⅥⅦⅧⅨⅩ]/, (match) => ROMAN_SEASONS[match[0]] || 0],
+  ];
+
+  for (const [pattern, resolve] of patterns) {
+    const match = value.match(pattern);
+    if (match) season = Math.max(season, resolve(match));
+  }
+  return season;
+}
+
+export function seasonNumber(anime: Anime): number {
+  const titles = [anime.zh, anime.en, anime.ja, anime.romaji].filter(Boolean);
+  let season = 0;
+  for (const title of titles) season = Math.max(season, detectSeasonNumber(title));
+  return season || 1;
+}
+
 export function franchiseKey(anime: Anime): string {
   const raw = `${anime.zh || ''} ${anime.en || ''} ${anime.ja || ''}`.toLowerCase();
   const key = raw
@@ -49,6 +125,7 @@ export function franchiseKey(anime: Anime): string {
     .replace(/\b(season|part|final season|final|ova|ona|movie|the movie)\b.*$/i, '')
     .replace(/\b(2nd|3rd|4th|5th|second|third|fourth|fifth)\b/g, '')
     .replace(/\b(ii|iii|iv|v|2nd|3rd|4th)\b/g, '')
+    .replace(/\bs\d+\b/gi, '')
     .replace(/[\u2160-\u217f]/g, '')
     .replace(/[ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ]/g, '')
     .replace(/[^\p{L}\p{N}]/gu, '');
@@ -159,7 +236,18 @@ export function calculateRecommendations(
     (sum, tag) => sum + (profile.tagWeights[tag] || 0),
     0,
   );
-  const watchedFranchises = new Set(watched.map(franchiseKey));
+  const watchedFranchiseSeasons = new Map<string, number>();
+  const watchedByFranchise = new Map<string, Anime[]>();
+  for (const anime of watched) {
+    const key = franchiseKey(anime);
+    watchedFranchiseSeasons.set(
+      key,
+      Math.max(watchedFranchiseSeasons.get(key) || 0, seasonNumber(anime)),
+    );
+    const list = watchedByFranchise.get(key) || [];
+    list.push(anime);
+    watchedByFranchise.set(key, list);
+  }
   const candidates: Candidate[] = [];
 
   for (const anime of all) {
@@ -169,6 +257,11 @@ export function calculateRecommendations(
 
     const matchedTags = anime.tags.filter((tag) => (profile.tagWeights[tag] || 0) > 0);
     if (matchedTags.length < 2) continue;
+
+    const franchise = franchiseKey(anime);
+    const candidateSeason = seasonNumber(anime);
+    const watchedSeason = watchedFranchiseSeasons.get(franchise);
+    if (watchedSeason !== undefined && candidateSeason <= watchedSeason) continue;
 
     const tagWeight = matchedTags.reduce(
       (sum, tag) => sum + (profile.tagWeights[tag] || 0),
@@ -190,7 +283,7 @@ export function calculateRecommendations(
     const formatAffinity = anime.format === profile.favoriteFormat ? 1 : 0;
     const episodes = anime.episodes ?? (anime.format === 'MOVIE' ? 1 : 12);
     const episodeAffinity = 1 - Math.min(1, Math.abs(episodes - profile.averageEpisodes) / 24);
-    const sequel = watchedFranchises.has(franchiseKey(anime)) ? 0.08 : 0;
+    const sequel = watchedSeason !== undefined ? 0.08 : 0;
     const jitter = seed
       ? ((hash(`${anime.id}:${seed}`) % 1000) / 1000) * 0.06
       : 0;
@@ -219,7 +312,12 @@ export function calculateRecommendations(
         };
       })
       .filter((option) => option.weight > 0)
-      .sort((a, b) => b.weight - a.weight)
+      .sort((a, b) => {
+        const sameFranchise = watchedByFranchise.get(franchise) || [];
+        const aSame = sameFranchise.some((source) => source.id === a.anime.id) ? 1 : 0;
+        const bSame = sameFranchise.some((source) => source.id === b.anime.id) ? 1 : 0;
+        return bSame - aSame || b.weight - a.weight;
+      })
       .slice(0, 5);
 
     const because = becauseOptions[0]

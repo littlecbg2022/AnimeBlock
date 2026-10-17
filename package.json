@@ -1,16 +1,18 @@
 {
-  "name": "my-anime-site",
-  "version": "0.1.0",
+  "name": "animeblock",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit --incremental false",
+    "data": "node scripts/build-catalog.mjs",
+    "data:validate": "node scripts/validate-catalog.mjs"
   },
   "dependencies": {
     "@tailwindcss/oxide-win32-x64-msvc": "^4.2.2",
-    "framer-motion": "^12.38.0",
     "lucide-react": "^0.577.0",
     "next": "16.2.0",
     "react": "19.2.4",

@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local refactor scratch and data cache
+/.tmp/
+/.archive/
+*.log
+/scripts/.cache/

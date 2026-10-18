@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      GITHUB_PAGES_CUSTOM_DOMAIN: ${{ vars.GITHUB_PAGES_CUSTOM_DOMAIN }}
+      GITHUB_PAGES_CUSTOM_DOMAIN: ${{ vars.ANIMEBLOCK_PAGES_CUSTOM_DOMAIN || vars.GITHUB_PAGES_CUSTOM_DOMAIN }}
     steps:
       - uses: actions/checkout@v4
 

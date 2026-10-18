@@ -4137,3 +4137,24 @@ body::after {
     gap: 44px;
   }
 }
+
+/* Jump affordance on hover: a filled mint target is intentionally louder. */
+.cell-info svg {
+  width: 15px;
+  height: 15px;
+}
+
+.cell-wrap:hover .cell-info,
+.cell-wrap:focus-within .cell-info {
+  opacity: 1;
+  border-color: var(--acid);
+  background: var(--acid);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(47, 158, 110, 0.22);
+}
+
+.cell-wrap:hover .cell-info:hover {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}

@@ -60,6 +60,39 @@ function sortItems(items: CatalogYear['items'], mode: SortMode, lang: Language) 
   return [...sorted, ...sealed];
 }
 
+function normalizeSearch(value: string) {
+  return String(value || '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/[\s\p{P}\p{S}]/gu, '');
+}
+
+function searchBigrams(value: string) {
+  const result = new Set<string>();
+  for (let index = 0; index < value.length - 1; index += 1) {
+    result.add(value.slice(index, index + 2));
+  }
+  return result;
+}
+
+function diceCoefficient(a: string, b: string) {
+  const left = searchBigrams(a);
+  const right = searchBigrams(b);
+  if (!left.size || !right.size) return 0;
+  let overlap = 0;
+  for (const gram of left) if (right.has(gram)) overlap += 1;
+  return (2 * overlap) / (left.size + right.size);
+}
+
+function fuzzyTitleMatch(title: string, normalizedNeedle: string) {
+  if (!normalizedNeedle) return false;
+  const normalizedTitle = normalizeSearch(title);
+  if (!normalizedTitle) return false;
+  if (normalizedTitle.includes(normalizedNeedle)) return true;
+  if (normalizedNeedle.length < 3) return false;
+  return diceCoefficient(normalizedTitle, normalizedNeedle) >= 0.42;
+}
+
 function filterYears(
   groups: CatalogYear[],
   query: string,
@@ -70,6 +103,7 @@ function filterYears(
   const needle = query.trim().toLowerCase();
   if (!needle && !onlyUnwatched) return groups;
 
+  const normalizedNeedle = normalizeSearch(needle);
   const yearNeedle = /^\d{4}$/.test(needle) ? Number(needle) : null;
 
   return groups
@@ -94,7 +128,24 @@ function filterYears(
           .toLowerCase();
 
         if (haystack.includes(needle)) return true;
-        return anime.tags.some((tag) => getTagLabel(tag, lang).toLowerCase().includes(needle));
+        if (normalizedNeedle && normalizeSearch(haystack).includes(normalizedNeedle)) {
+          return true;
+        }
+        if (
+          normalizedNeedle &&
+          [anime.zh, anime.en, anime.ja, anime.romaji].some((title) =>
+            fuzzyTitleMatch(title, normalizedNeedle),
+          )
+        ) {
+          return true;
+        }
+        return anime.tags.some((tag) => {
+          const label = getTagLabel(tag, lang);
+          return (
+            label.toLowerCase().includes(needle) ||
+            fuzzyTitleMatch(label, normalizedNeedle)
+          );
+        });
       }),
     }))
     .filter((group) => group.items.length > 0);

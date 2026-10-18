@@ -303,19 +303,6 @@ async function fetchAniListPage(year, page) {
   return media;
 }
 
-async function fetchAniListYear(year) {
-  const collected = [];
-  for (let page = 1; page <= 3; page += 1) {
-    const media = await fetchAniListPage(year, page);
-    collected.push(...media);
-    const usable = collected.filter((entry) => !blocklistIds.has(String(entry.id)));
-    if (usable.length >= perYear || media.length < perYear) break;
-  }
-  return collected
-    .filter((entry) => !blocklistIds.has(String(entry.id)))
-    .slice(0, perYear);
-}
-
 /* ------------------------------------------------------------------ */
 /* bilibili                                                            */
 /* ------------------------------------------------------------------ */
@@ -627,6 +614,37 @@ function applyDouban(item, payload) {
   }
 }
 
+async function fetchAniListCandidates(year) {
+  const collected = [];
+  for (let page = 1; page <= 3; page += 1) {
+    const media = await fetchAniListPage(year, page);
+    collected.push(...media);
+    if (media.length < perYear) break;
+  }
+  return collected;
+}
+
+function dedupeBase(title) {
+  return String(title || '')
+    .toLowerCase()
+    .replace(/\b(?:cour|part)[.\s]*\d+\b/gi, '')
+    .replace(/\b\d+(?:st|nd|rd|th)\s+(?:cour|part)\b/gi, '')
+    .replace(/第\s*\d+\s*(?:部分|クール|部)/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/[\s:：\-–—,，.。·•'"“”‘’()（）[\]【】]/g, '')
+    .trim();
+}
+
+function hasPartMarker(title) {
+  return /\b(?:cour|part)[.\s]*\d+\b|\b\d+(?:st|nd|rd|th)\s+(?:cour|part)\b|第\s*\d+\s*(?:部分|クール|部)/i.test(
+    String(title || ''),
+  );
+}
+
+function mediaTitle(entry) {
+  return entry.title?.english || entry.title?.romaji || entry.title?.native || '';
+}
+
 /* ------------------------------------------------------------------ */
 /* main                                                                */
 /* ------------------------------------------------------------------ */
@@ -638,11 +656,24 @@ async function main() {
   const bangumi = await loadBangumiData();
 
   const catalogYears = [];
+  const seenBases = new Set();
   for (const year of years) {
-    const media = await fetchAniListYear(year);
+    const media = await fetchAniListCandidates(year);
     if (!media.length) throw new Error(`AniList returned no media for ${year}`);
-    if (media.length < perYear) log(`[warn] ${year}: only ${media.length}/${perYear} titles`);
-    const items = media.map((entry) => makeItem(entry, year, legacy, bangumi));
+    media.sort(
+      (a, b) => Number(hasPartMarker(mediaTitle(a))) - Number(hasPartMarker(mediaTitle(b))),
+    );
+    const selected = [];
+    for (const entry of media) {
+      if (blocklistIds.has(String(entry.id))) continue;
+      const base = dedupeBase(mediaTitle(entry));
+      if (base && seenBases.has(base)) continue;
+      if (base) seenBases.add(base);
+      selected.push(entry);
+      if (selected.length >= perYear) break;
+    }
+    if (selected.length < perYear) log(`[warn] ${year}: only ${selected.length}/${perYear} after dedupe`);
+    const items = selected.map((entry) => makeItem(entry, year, legacy, bangumi));
     catalogYears.push({
       year,
       status: year === END_YEAR ? 'ongoing' : 'complete',

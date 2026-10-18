@@ -58,6 +58,7 @@ function AnimeCellComponent({
       <button
         type="button"
         className="cell-info"
+        title={t.openDetails}
         aria-label={`${t.openDetails}: ${title}`}
         onClick={(event) => {
           event.stopPropagation();
@@ -66,7 +67,7 @@ function AnimeCellComponent({
         onFocus={() => onPreview(anime)}
         onBlur={onPreviewEnd}
       >
-        <ArrowUpRight size={13} aria-hidden="true" />
+        <ArrowUpRight size={15} aria-hidden="true" />
       </button>
     </div>
   );

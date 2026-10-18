@@ -20,6 +20,20 @@ export interface Messages {
   legendWatched: string;
   legendUnwatched: string;
   legendSealed: string;
+  tasteKicker: string;
+  tasteTitle: string;
+  tasteBasedOn: (count: number) => string;
+  tasteHint: string;
+  tasteEmpty: string;
+  tasteWatchedCount: (count: number) => string;
+  tasteClear: string;
+  tasteToggle: string;
+  tasteLegendHeal: string;
+  tasteLegendDark: string;
+  tasteLegendAction: string;
+  tasteLegendWorld: string;
+  tasteLegendCharacter: string;
+  tasteLegendCraft: string;
   radarTitle: string;
   radarKicker: string;
   radarEmpty: string;
@@ -153,6 +167,20 @@ const zh: Messages = {
   legendWatched: '已看',
   legendUnwatched: '未看',
   legendSealed: '封印',
+  tasteKicker: 'TASTE CLOUD / 口味成分',
+  tasteTitle: '口味词云',
+  tasteBasedOn: (count) => `基于 ${count} 部已看`,
+  tasteHint: '点击标签筛选，再点一次取消',
+  tasteEmpty: '标记几部作品后，这里会生成你的口味词云。',
+  tasteWatchedCount: (count) => `已看 ${count} 部`,
+  tasteClear: '清除标签筛选',
+  tasteToggle: '展开或收起口味词云',
+  tasteLegendHeal: '治愈 / 日常',
+  tasteLegendDark: '致郁 / 沉重',
+  tasteLegendAction: '燃 / 动作',
+  tasteLegendWorld: '幻想 / 世界',
+  tasteLegendCharacter: '人物 / 关系',
+  tasteLegendCraft: '制作 / 风格',
   radarTitle: '推荐雷达',
   radarKicker: 'EXPLAINABLE PICKS',
   radarEmpty: '再标记几部，雷达就会启动。',
@@ -166,7 +194,7 @@ const zh: Messages = {
   radarRefresh: '换一批',
   radarNeedMore: (count) => `再标记 ${count} 部即可启动推荐。`,
   archiveTitle: 'THE ARCHIVE',
-  archiveKicker: '全部年份 / 每年最多 50 部',
+  archiveKicker: '全部年份 / 每年 50 部',
   sortBy: '排序',
   sortRating: '评分',
   sortDate: '发布时间',
@@ -284,6 +312,20 @@ const en: Messages = {
   legendWatched: 'watched',
   legendUnwatched: 'unwatched',
   legendSealed: 'sealed',
+  tasteKicker: 'TASTE CLOUD / PERSONAL MIX',
+  tasteTitle: 'Taste Cloud',
+  tasteBasedOn: (count) => `based on ${count} watched`,
+  tasteHint: 'Click a tag to filter; click again to clear',
+  tasteEmpty: 'Mark a few titles and your taste cloud will grow here.',
+  tasteWatchedCount: (count) => `${count} watched`,
+  tasteClear: 'Clear tag filter',
+  tasteToggle: 'Expand or collapse the taste cloud',
+  tasteLegendHeal: 'healing / daily',
+  tasteLegendDark: 'dark / heavy',
+  tasteLegendAction: 'action / hype',
+  tasteLegendWorld: 'fantasy / world',
+  tasteLegendCharacter: 'character / drama',
+  tasteLegendCraft: 'craft / style',
   radarTitle: 'Recommendation Radar',
   radarKicker: 'EXPLAINABLE PICKS',
   radarEmpty: 'Mark a few titles and the radar wakes up.',
@@ -297,7 +339,7 @@ const en: Messages = {
   radarRefresh: 'Refresh',
   radarNeedMore: (count) => `Mark ${count} more title(s) to wake the radar.`,
   archiveTitle: 'THE ARCHIVE',
-  archiveKicker: 'all years / up to 50 titles per year',
+  archiveKicker: 'all years / 50 titles per year',
   sortBy: 'Sort',
   sortRating: 'Rating',
   sortDate: 'Release',
@@ -416,6 +458,20 @@ const ja: Messages = {
   legendWatched: '視聴済み',
   legendUnwatched: '未視聴',
   legendSealed: '封印',
+  tasteKicker: 'TASTE CLOUD / 趣味の成分',
+  tasteTitle: '趣味のワードクラウド',
+  tasteBasedOn: (count) => `${count} 作品の視聴から`,
+  tasteHint: 'タグをクリックで絞り込み、もう一度で解除',
+  tasteEmpty: '作品をいくつか記録すると、ここに趣味のワードクラウドが育ちます。',
+  tasteWatchedCount: (count) => `${count} 作品視聴`,
+  tasteClear: 'タグ絞り込みを解除',
+  tasteToggle: 'ワードクラウドを開閉',
+  tasteLegendHeal: '癒し / 日常',
+  tasteLegendDark: '鬱 / 重厚',
+  tasteLegendAction: '燃え / アクション',
+  tasteLegendWorld: '幻想 / 世界',
+  tasteLegendCharacter: '人物 / 関係',
+  tasteLegendCraft: '制作 / スタイル',
   radarTitle: '推薦レーダー',
   radarKicker: 'EXPLAINABLE PICKS',
   radarEmpty: '数作品を記録すると、レーダーが起動します。',
@@ -429,7 +485,7 @@ const ja: Messages = {
   radarRefresh: '別の候補',
   radarNeedMore: (count) => `あと ${count} 作品を記録すると推薦が始まります。`,
   archiveTitle: 'THE ARCHIVE',
-  archiveKicker: '全年度 / 毎年最大 50 作品',
+  archiveKicker: '全年度 / 毎年50作品',
   sortBy: '並び順',
   sortRating: '評価',
   sortDate: '放送日',
@@ -613,6 +669,43 @@ const tagLabels: Record<string, Partial<Record<Language, string>>> = {
   Polyamorphous: { zh: '多形态', ja: '多形態' },
   Mature: { zh: '成人向', ja: '成人向け' },
   'Primarily Female Cast': { zh: '女性群像', ja: '女性中心' },
+  'Primarily Male Cast': { zh: '男性群像', ja: '男性中心' },
+  'LGBTQ+ Themes': { zh: 'LGBTQ+', ja: 'LGBTQ+' },
+  'Mahou Shoujo': { zh: '魔法少女', ja: '魔法少女' },
+  'Cute Girls Doing Cute Things': { zh: '空气系', ja: '空気系' },
+  'Time Travel': { zh: '时间旅行', ja: 'タイムトラベル' },
+  Mythology: { zh: '神话', ja: '神話' },
+  Battle: { zh: '战斗', ja: 'バトル' },
+  Dungeon: { zh: '迷宫', ja: 'ダンジョン' },
+  CGI: { zh: 'CGI', ja: 'CGI' },
+  'Full CGI': { zh: '全 CGI', ja: 'フルCG' },
+  Meta: { zh: '元叙事', ja: 'メタ' },
+  Episodic: { zh: '单元剧', ja: '一話完結' },
+  Anthology: { zh: '单元集', ja: 'アンソロジー' },
+  Experimental: { zh: '实验', ja: '実験的' },
+  'Avant Garde': { zh: '前卫', ja: 'アバンギャルド' },
+  'Real Robot': { zh: '真实系机甲', ja: 'リアルロボット' },
+  'Super Robot': { zh: '超级系机甲', ja: 'スーパーロボット' },
+  Assassins: { zh: '刺客', ja: '暗殺者' },
+  Espionage: { zh: '谍战', ja: 'スパイ' },
+  Police: { zh: '警察', ja: '警察' },
+  Delinquents: { zh: '不良', ja: '不良' },
+  Nakama: { zh: '伙伴', ja: '仲間' },
+  Vampire: { zh: '吸血鬼', ja: '吸血鬼' },
+  Robots: { zh: '机器人', ja: 'ロボット' },
+  'Artificial Intelligence': { zh: '人工智能', ja: '人工知能' },
+  Survival: { zh: '生存', ja: 'サバイバル' },
+  Grief: { zh: '失落', ja: '喪失' },
+  Tragedy: { zh: '悲剧', ja: '悲劇' },
+  Gyaru: { zh: '辣妹', ja: 'ギャル' },
+  Kuudere: { zh: '三无', ja: 'クーデレ' },
+  Yandere: { zh: '病娇', ja: 'ヤンデレ' },
+  Adaptation: { zh: '改编', ja: '原作あり' },
+  Manga: { zh: '漫画原作', ja: '漫画原作' },
+  'Light Novel': { zh: '轻小说原作', ja: 'ラノベ原作' },
+  'Visual Novel': { zh: '视觉小说原作', ja: 'ビジュアルノベル原作' },
+  'Original Work': { zh: '原创', ja: 'オリジナル' },
+  '4-Koma': { zh: '四格漫画', ja: '4コマ' },
 };
 
 export function getAnimeTitle(anime: Anime, lang: Language): string {

@@ -167,7 +167,7 @@ const zh: Messages = {
   heroMeta: (first, last, years, total) =>
     `${first} — ${last} · ${years} 年 · ${total.toLocaleString('en-US')} 部`,
   archiveMap: 'ARCHIVE MAP',
-  archiveMapHint: '全部年份 / 每年 50 部 · 按评分选取',
+  archiveMapHint: '全部年份 / 每年 50 部 · 综合排序',
   legendWatched: '已看',
   legendUnwatched: '未看',
   legendSealed: '封印',
@@ -316,7 +316,7 @@ const en: Messages = {
   heroMeta: (first, last, years, total) =>
     `${first} — ${last} · ${years} years · ${total.toLocaleString('en-US')} titles`,
   archiveMap: 'ARCHIVE MAP',
-  archiveMapHint: 'all years / 50 per year · by rating',
+  archiveMapHint: 'all years / 50 per year · blended ranking',
   legendWatched: 'watched',
   legendUnwatched: 'unwatched',
   legendSealed: 'sealed',
@@ -466,7 +466,7 @@ const ja: Messages = {
   heroMeta: (first, last, years, total) =>
     `${first} — ${last} · ${years} 年 · ${total.toLocaleString('en-US')} 作品`,
   archiveMap: 'ARCHIVE MAP',
-  archiveMapHint: '全年度 / 毎年50作品 · 評価順',
+  archiveMapHint: '全年度 / 毎年50作品 · 総合順',
   legendWatched: '視聴済み',
   legendUnwatched: '未視聴',
   legendSealed: '封印',

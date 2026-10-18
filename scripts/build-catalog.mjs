@@ -259,7 +259,8 @@ query ($year: Int, $perPage: Int, $page: Int) {
       type: ANIME
       sort: SCORE_DESC
       isAdult: false
-      format_in: [TV, TV_SHORT]
+      countryOfOrigin: "JP"
+      format_in: [TV]
     ) {
       id
       title { romaji english native userPreferred }
@@ -284,8 +285,8 @@ query ($year: Int, $perPage: Int, $page: Int) {
   }
 }`;
 
-async function fetchAniListPage(year, page) {
-  const cacheName = `anilist-score-${year}-${perYear}-p${page}.json`;
+async function fetchAniListPage(year, page, sort = 'SCORE_DESC') {
+  const cacheName = `anilist-${sort.toLowerCase()}-tv-${year}-${perYear}-p${page}.json`;
   const cached = await readCache(cacheName);
   if (cached) return cached;
 
@@ -293,7 +294,7 @@ async function fetchAniListPage(year, page) {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
-      query: ANILIST_QUERY,
+      query: sort === 'SCORE_DESC' ? ANILIST_QUERY : ANILIST_QUERY.replace('SCORE_DESC', sort),
       variables: { year, perPage: perYear, page },
     }),
   });
@@ -617,12 +618,14 @@ function applyDouban(item, payload) {
 
 async function fetchAniListCandidates(year) {
   const collected = [];
-  for (let page = 1; page <= 3; page += 1) {
-    const media = await fetchAniListPage(year, page);
+  for (let page = 1; page <= 5; page += 1) {
+    const media = await fetchAniListPage(year, page, 'SCORE_DESC');
     collected.push(...media);
     if (media.length < perYear) break;
   }
-  return collected;
+  const popular = await fetchAniListPage(year, 1, 'POPULARITY_DESC');
+  collected.push(...popular);
+  return [...new Map(collected.map((entry) => [entry.id, entry])).values()];
 }
 
 function dedupeBase(title) {
@@ -646,6 +649,36 @@ function mediaTitle(entry) {
   return entry.title?.english || entry.title?.romaji || entry.title?.native || '';
 }
 
+function weightedScore(entry) {
+  const score = Number(entry.averageScore) || 0;
+  if (!score) return Number.NEGATIVE_INFINITY;
+  const popularity = Number(entry.popularity) || 0;
+  const prior = 70;
+  const priorWeight = 20000;
+  return (score * popularity + prior * priorWeight) / (popularity + priorWeight);
+}
+
+function isTraditionalTv(entry) {
+  if (entry.format !== 'TV') return false;
+  if (Number(entry.popularity) < 10000) return false;
+  if (Number(entry.episodes) > 100) return false;
+  const duration = Number(entry.duration);
+  if (duration && (duration < 20 || duration > 30)) return false;
+  const tags = new Set([
+    ...(entry.genres || []),
+    ...(entry.tags || []).map((tag) => tag.name),
+  ]);
+  const excluded = [
+    'Kids',
+    'Idol',
+    'Puppetry',
+    'Stop Motion',
+    'Full CGI',
+    'Rotoscoping',
+  ];
+  return !excluded.some((tag) => tags.has(tag));
+}
+
 /* ------------------------------------------------------------------ */
 /* main                                                                */
 /* ------------------------------------------------------------------ */
@@ -661,16 +694,30 @@ async function main() {
   for (const year of years) {
     const media = await fetchAniListCandidates(year);
     if (!media.length) throw new Error(`AniList returned no media for ${year}`);
-    media.sort(
-      (a, b) => Number(hasPartMarker(mediaTitle(a))) - Number(hasPartMarker(mediaTitle(b))),
-    );
-    const selected = [];
+    const groups = new Map();
     for (const entry of media) {
       if (blocklistIds.has(String(entry.id))) continue;
+      if (!isTraditionalTv(entry)) continue;
       const base = dedupeBase(mediaTitle(entry));
-      if (base && seenBases.has(base)) continue;
-      if (base) seenBases.add(base);
-      selected.push(entry);
+      if (!base) continue;
+      const weighted = weightedScore(entry);
+      const hasPart = hasPartMarker(mediaTitle(entry));
+      const previous = groups.get(base);
+      if (
+        !previous ||
+        (previous.hasPart && !hasPart) ||
+        (previous.hasPart === hasPart && weighted > previous.weighted)
+      ) {
+        groups.set(base, { entry, weighted, hasPart });
+      }
+    }
+    const selected = [];
+    for (const [base, candidate] of [...groups.entries()].sort(
+      (a, b) => b[1].weighted - a[1].weighted,
+    )) {
+      if (seenBases.has(base)) continue;
+      seenBases.add(base);
+      selected.push(candidate.entry);
       if (selected.length >= perYear) break;
     }
     if (selected.length < perYear) log(`[warn] ${year}: only ${selected.length}/${perYear} after dedupe`);

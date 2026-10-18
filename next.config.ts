@@ -1,10 +1,11 @@
 import type { NextConfig } from 'next';
 
 const isGitHubPages = process.env.GITHUB_ACTIONS === 'true';
+const isCustomDomain = process.env.GITHUB_PAGES_CUSTOM_DOMAIN === 'true';
 
 const nextConfig: NextConfig = {
   output: isGitHubPages ? 'export' : undefined,
-  basePath: isGitHubPages ? '/AnimeBlock' : '',
+  basePath: isGitHubPages && !isCustomDomain ? '/AnimeBlock' : '',
   trailingSlash: isGitHubPages ? true : undefined,
   poweredByHeader: false,
   reactStrictMode: true,

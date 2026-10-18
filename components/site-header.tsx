@@ -47,7 +47,7 @@ export function SiteHeader({
         <a className="brand" href="#archive" aria-label="ANIMEBLOCK">
           <span className="brand-mark" aria-hidden="true" />
           <span className="brand-copy">
-            <strong>ANIMEBLOCK</strong>
+            <strong data-text="ANIMEBLOCK">ANIMEBLOCK</strong>
             <small>{t.brandSub}</small>
           </span>
         </a>

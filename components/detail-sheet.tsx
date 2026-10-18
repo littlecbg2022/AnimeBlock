@@ -102,6 +102,18 @@ export function DetailSheet({
           label: t.watchOmofuna,
           url: `https://www.omofuna.com/search/-------------.html?wd=${encodeURIComponent(omofunQuery)}`,
         },
+        {
+          label: t.watchAnime1,
+          url: `https://anime1.me/?s=${encodeURIComponent(anime?.zh || omofunQuery)}`,
+        },
+        {
+          label: t.watchYinghua,
+          url: `https://www.yinghuadmm.com/search/-------------.html?wd=${encodeURIComponent(anime?.zh || omofunQuery)}`,
+        },
+        {
+          label: t.watchFengche,
+          url: `https://www.dm530.in/search?q=${encodeURIComponent(anime?.zh || omofunQuery)}`,
+        },
       ]
     : [];
 

@@ -20,6 +20,7 @@ export interface Messages {
   legendWatched: string;
   legendUnwatched: string;
   legendSealed: string;
+  tasteCloudLabel: string;
   tasteKicker: string;
   tasteTitle: string;
   tasteBasedOn: (count: number) => string;
@@ -81,6 +82,9 @@ export interface Messages {
   watchPaidTitle: string;
   watchAgedm: string;
   watchOmofuna: string;
+  watchAnime1: string;
+  watchYinghua: string;
+  watchFengche: string;
   searchFallback: string;
   searchFull: string;
   searchJapanese: string;
@@ -163,10 +167,11 @@ const zh: Messages = {
   heroMeta: (first, last, years, total) =>
     `${first} — ${last} · ${years} 年 · ${total.toLocaleString('en-US')} 部`,
   archiveMap: 'ARCHIVE MAP',
-  archiveMapHint: '移动光标查看作品 · 点击跳到年份',
+  archiveMapHint: '全部年份 / 每年 50 部 · 按评分选取',
   legendWatched: '已看',
   legendUnwatched: '未看',
   legendSealed: '封印',
+  tasteCloudLabel: 'TASTE CLOUD',
   tasteKicker: 'TASTE CLOUD / 口味成分',
   tasteTitle: '口味词云',
   tasteBasedOn: (count) => `基于 ${count} 部已看`,
@@ -231,6 +236,9 @@ const zh: Messages = {
   watchPaidTitle: '正版平台',
   watchAgedm: 'AGE 动漫',
   watchOmofuna: 'OmoFun',
+  watchAnime1: 'Anime1',
+  watchYinghua: '樱花动漫',
+  watchFengche: '风车动漫',
   searchFallback: '搜不到？换关键词',
   searchFull: '全名',
   searchJapanese: '日文名',
@@ -308,10 +316,11 @@ const en: Messages = {
   heroMeta: (first, last, years, total) =>
     `${first} — ${last} · ${years} years · ${total.toLocaleString('en-US')} titles`,
   archiveMap: 'ARCHIVE MAP',
-  archiveMapHint: 'Hover to inspect · click to jump to a year',
+  archiveMapHint: 'all years / 50 per year · by rating',
   legendWatched: 'watched',
   legendUnwatched: 'unwatched',
   legendSealed: 'sealed',
+  tasteCloudLabel: 'TASTE CLOUD',
   tasteKicker: 'TASTE CLOUD / PERSONAL MIX',
   tasteTitle: 'Taste Cloud',
   tasteBasedOn: (count) => `based on ${count} watched`,
@@ -377,6 +386,9 @@ const en: Messages = {
   watchPaidTitle: 'Official platforms',
   watchAgedm: 'AGE Anime',
   watchOmofuna: 'OmoFun',
+  watchAnime1: 'Anime1',
+  watchYinghua: 'Yinghua Anime',
+  watchFengche: 'Fengche Anime',
   searchFallback: 'No result? Try another query',
   searchFull: 'full title',
   searchJapanese: 'Japanese title',
@@ -454,10 +466,11 @@ const ja: Messages = {
   heroMeta: (first, last, years, total) =>
     `${first} — ${last} · ${years} 年 · ${total.toLocaleString('en-US')} 作品`,
   archiveMap: 'ARCHIVE MAP',
-  archiveMapHint: 'カーソルで作品を確認 · クリックで年へ移動',
+  archiveMapHint: '全年度 / 毎年50作品 · 評価順',
   legendWatched: '視聴済み',
   legendUnwatched: '未視聴',
   legendSealed: '封印',
+  tasteCloudLabel: 'TASTE CLOUD',
   tasteKicker: 'TASTE CLOUD / 趣味の成分',
   tasteTitle: '趣味のワードクラウド',
   tasteBasedOn: (count) => `${count} 作品の視聴から`,
@@ -522,6 +535,9 @@ const ja: Messages = {
   watchPaidTitle: '公式配信',
   watchAgedm: 'AGE アニメ',
   watchOmofuna: 'OmoFun',
+  watchAnime1: 'Anime1',
+  watchYinghua: '桜アニメ',
+  watchFengche: '風車アニメ',
   searchFallback: '見つからない場合は別の語で',
   searchFull: '正式名',
   searchJapanese: '日本語名',

@@ -13,13 +13,14 @@ import type { Anime, CatalogYear, Language } from '@/lib/types';
 import { useWatchlist } from '@/lib/watchlist';
 import { DetailSheet } from './detail-sheet';
 import { ExternalLinkDialog } from './external-link-dialog';
+import { MicroInteractions } from './micro-interactions';
 import { OverviewPlate } from './overview-plate';
 import { PreviewCard } from './preview-card';
 import { RadarSheet } from './radar-sheet';
 import { RadarStrip } from './radar-strip';
 import { SettingsMenu } from './settings-menu';
 import { SiteHeader } from './site-header';
-import { TasteCloud } from './taste-cloud';
+import { HeroTasteCloud } from './taste-cloud';
 import { Toast } from './toast';
 import { YearSection } from './year-section';
 
@@ -63,12 +64,11 @@ function filterYears(
   groups: CatalogYear[],
   query: string,
   onlyUnwatched: boolean,
-  tagFilter: string | null,
   watched: Set<string>,
   lang: Language,
 ): CatalogYear[] {
   const needle = query.trim().toLowerCase();
-  if (!needle && !onlyUnwatched && !tagFilter) return groups;
+  if (!needle && !onlyUnwatched) return groups;
 
   const yearNeedle = /^\d{4}$/.test(needle) ? Number(needle) : null;
 
@@ -78,13 +78,6 @@ function filterYears(
       items: group.items.filter((anime) => {
         if (anime.isBanned) return false;
         if (onlyUnwatched && watched.has(anime.id)) return false;
-        if (
-          tagFilter &&
-          !anime.tags.includes(tagFilter) &&
-          !anime.genres.includes(tagFilter)
-        ) {
-          return false;
-        }
         if (!needle) return true;
         if (yearNeedle !== null && group.year === yearNeedle) return true;
 
@@ -111,8 +104,6 @@ export function Archive() {
   const [lang, setLang] = useState<Language>('zh');
   const [query, setQuery] = useState('');
   const [onlyUnwatched, setOnlyUnwatched] = useState(false);
-  const [tagFilter, setTagFilter] = useState<string | null>(null);
-  const [cloudOpen, setCloudOpen] = useState(true);
   const [sortMode, setSortMode] = useState<SortMode>('rating');
   const [preview, setPreview] = useState<Anime | null>(null);
   const [selected, setSelected] = useState<Anime | null>(null);
@@ -190,14 +181,14 @@ export function Archive() {
 
   const deferredQuery = useDeferredValue(query);
   const filteredYears = useMemo(
-    () => filterYears(sortedYears, deferredQuery, onlyUnwatched, tagFilter, watched, lang),
-    [sortedYears, deferredQuery, onlyUnwatched, tagFilter, watched, lang],
+    () => filterYears(sortedYears, deferredQuery, onlyUnwatched, watched, lang),
+    [sortedYears, deferredQuery, onlyUnwatched, watched, lang],
   );
   const resultCount = useMemo(
     () => filteredYears.reduce((sum, group) => sum + group.items.length, 0),
     [filteredYears],
   );
-  const isFiltering = query.trim().length > 0 || onlyUnwatched || Boolean(tagFilter);
+  const isFiltering = query.trim().length > 0 || onlyUnwatched;
 
   const changeLang = useCallback((next: Language) => {
     setLang(next);
@@ -229,7 +220,6 @@ export function Archive() {
   const clearFilters = useCallback(() => {
     setQuery('');
     setOnlyUnwatched(false);
-    setTagFilter(null);
   }, []);
 
   const handleQuery = useCallback((value: string) => {
@@ -247,21 +237,8 @@ export function Archive() {
   const handleJump = useCallback((year: number) => {
     setQuery('');
     setOnlyUnwatched(false);
-    setTagFilter(null);
     window.requestAnimationFrame(() => {
       document.getElementById(`year-${year}`)?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    });
-  }, []);
-
-  const handleTasteTag = useCallback((tag: string) => {
-    setQuery('');
-    setOnlyUnwatched(false);
-    setTagFilter((current) => (current === tag ? null : tag));
-    window.requestAnimationFrame(() => {
-      document.getElementById('archive')?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
       });
@@ -381,6 +358,8 @@ export function Archive() {
       <main className="main">
         <section className="hero">
           <div className="hero-copy">
+            <HeroTasteCloud watched={watched} lang={lang} />
+
             <p className="eyebrow">{t.heroKicker}</p>
             <div className="hero-count">
               <span className="hero-number">{padCount(watchedCount)}</span>
@@ -406,15 +385,6 @@ export function Archive() {
           onViewAll={handleViewAllRadar}
         />
 
-        <TasteCloud
-          watched={watched}
-          lang={lang}
-          activeTag={tagFilter}
-          open={cloudOpen}
-          onToggle={() => setCloudOpen((value) => !value)}
-          onTag={handleTasteTag}
-        />
-
         <section className="archive" id="archive">
           <div className="archive-head">
             <p className="eyebrow">{t.archiveKicker}</p>
@@ -436,22 +406,6 @@ export function Archive() {
                   </button>
                 ))}
               </div>
-              {tagFilter ? (
-                <button
-                  type="button"
-                  className="tag-filter-chip"
-                  onClick={() => setTagFilter(null)}
-                  aria-label={t.tasteClear}
-                >
-                  <span className="tag-filter-hash" aria-hidden="true">
-                    #
-                  </span>
-                  {getTagLabel(tagFilter, lang)}
-                  <span className="tag-filter-x" aria-hidden="true">
-                    ×
-                  </span>
-                </button>
-              ) : null}
               <span className="archive-count">
                 {isFiltering
                   ? `${formatInt(resultCount)} / ${formatInt(totals.playable)}`
@@ -555,6 +509,7 @@ export function Archive() {
         onConfirm={handleConfirmExternal}
       />
 
+      <MicroInteractions />
       <Toast message={toast} />
     </div>
   );

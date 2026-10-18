@@ -256,7 +256,7 @@ query ($year: Int, $perPage: Int, $page: Int) {
     media(
       seasonYear: $year
       type: ANIME
-      sort: POPULARITY_DESC
+      sort: SCORE_DESC
       isAdult: false
       format_in: [TV, TV_SHORT]
     ) {
@@ -284,7 +284,7 @@ query ($year: Int, $perPage: Int, $page: Int) {
 }`;
 
 async function fetchAniListPage(year, page) {
-  const cacheName = `anilist-${year}-${perYear}-p${page}.json`;
+  const cacheName = `anilist-score-${year}-${perYear}-p${page}.json`;
   const cached = await readCache(cacheName);
   if (cached) return cached;
 
@@ -293,7 +293,7 @@ async function fetchAniListPage(year, page) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       query: ANILIST_QUERY,
-      variables: { year, perPage, page },
+      variables: { year, perPage: perYear, page },
     }),
   });
   if (data.errors?.length) throw new Error(`AniList ${year} p${page}: ${data.errors[0].message}`);

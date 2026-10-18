@@ -36,18 +36,14 @@ const PlateGrid = memo(function PlateGrid({
           <div className="plate-cells">
             {group.items.map((anime) => {
               const title = getAnimeTitle(anime, lang);
-              const state = anime.isBanned
-                ? 'is-sealed'
-                : watched.has(anime.id)
-                  ? 'is-watched'
-                  : 'is-unwatched';
+              const state = watched.has(anime.id) ? 'is-watched' : 'is-unwatched';
               return (
                 <button
                   key={anime.id}
                   type="button"
                   className={`plate-cell ${state}`}
                   tabIndex={-1}
-                  aria-label={`${group.year} · ${title}${anime.isBanned ? ' · sealed' : ''}`}
+                  aria-label={`${group.year} · ${title}`}
                   onMouseEnter={() => onHover(group.year, title)}
                   onClick={() => onJump(group.year)}
                 />
@@ -104,10 +100,6 @@ export function OverviewPlate({ years, watched, lang, onJump }: OverviewPlatePro
         <span>
           <i className="legend-dot is-unwatched" aria-hidden="true" />
           {t.legendUnwatched}
-        </span>
-        <span>
-          <i className="legend-dot is-sealed" aria-hidden="true" />
-          {t.legendSealed}
         </span>
       </div>
     </section>

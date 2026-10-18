@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "reason": "manual exclusion; kept out of the public catalog and future AniList ranking builds",
+  "ids": [
+    "21459",
+    "21856",
+    "100166",
+    "104276",
+    "117193",
+    "139630",
+    "163139",
+    "182896",
+    "185736"
+  ],
+  "items": [
+    { "id": "21459", "anilistId": 21459, "zh": "我的英雄学院", "en": "My Hero Academia" },
+    { "id": "21856", "anilistId": 21856, "zh": "我的英雄学院 第二季", "en": "My Hero Academia Season 2" },
+    { "id": "100166", "anilistId": 100166, "zh": "我的英雄学院 第三季", "en": "My Hero Academia Season 3" },
+    { "id": "104276", "anilistId": 104276, "zh": "我的英雄学院 第四季", "en": "My Hero Academia Season 4" },
+    { "id": "117193", "anilistId": 117193, "zh": "我的英雄学院 第五季", "en": "My Hero Academia Season 5" },
+    { "id": "139630", "anilistId": 139630, "zh": "我的英雄学院 第六季", "en": "My Hero Academia Season 6" },
+    { "id": "163139", "anilistId": 163139, "zh": "我的英雄学院 第七季", "en": "My Hero Academia Season 7" },
+    { "id": "182896", "anilistId": 182896, "zh": "我的英雄学院 最终季", "en": "My Hero Academia FINAL SEASON" },
+    { "id": "185736", "anilistId": 185736, "zh": "正义使者 -我的英雄学院之非法英雄-", "en": "My Hero Academia: Vigilantes" }
+  ]
+}

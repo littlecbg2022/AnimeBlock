@@ -20,6 +20,7 @@ import { pathToFileURL } from 'node:url';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CACHE_DIR = path.join(ROOT, 'scripts', '.cache');
 const OUT_FILE = path.join(ROOT, 'data', 'catalog.json');
+const BLOCKLIST_FILE = path.join(ROOT, 'data', 'blocklist.json');
 const BANGUMI_DATA_URL = 'https://cdn.jsdelivr.net/npm/bangumi-data/dist/data.json';
 const ANILIST_URL = 'https://graphql.anilist.co';
 
@@ -39,6 +40,19 @@ const perYear = args.limit ?? PER_YEAR;
 const skipDouban = Boolean(args['skip-douban']);
 const skipBilibili = Boolean(args['skip-bilibili']);
 const refresh = Boolean(args.refresh);
+
+let blocklistIds = new Set();
+
+async function loadBlocklist() {
+  try {
+    const data = JSON.parse(await fs.readFile(BLOCKLIST_FILE, 'utf8'));
+    blocklistIds = new Set((data.ids || []).map(String));
+    log(`[blocklist] ${blocklistIds.size} ids`);
+  } catch {
+    blocklistIds = new Set();
+    log('[blocklist] none');
+  }
+}
 
 const UA = 'AnimeBlock/2.0 (+https://github.com/LittleCabbage2022/AnimeBlock)';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -237,8 +251,8 @@ function findBangumiItem(anime, bangumi) {
 /* ------------------------------------------------------------------ */
 
 const ANILIST_QUERY = `
-query ($year: Int, $perPage: Int) {
-  Page(page: 1, perPage: $perPage) {
+query ($year: Int, $perPage: Int, $page: Int) {
+  Page(page: $page, perPage: $perPage) {
     media(
       seasonYear: $year
       type: ANIME
@@ -269,21 +283,37 @@ query ($year: Int, $perPage: Int) {
   }
 }`;
 
-async function fetchAniListYear(year) {
-  const cacheName = `anilist-${year}-${perYear}.json`;
+async function fetchAniListPage(year, page) {
+  const cacheName = `anilist-${year}-${perYear}-p${page}.json`;
   const cached = await readCache(cacheName);
   if (cached) return cached;
 
   const data = await fetchJson(ANILIST_URL, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ query: ANILIST_QUERY, variables: { year, perPage: perYear } }),
+    body: JSON.stringify({
+      query: ANILIST_QUERY,
+      variables: { year, perPage, page },
+    }),
   });
-  if (data.errors?.length) throw new Error(`AniList ${year}: ${data.errors[0].message}`);
+  if (data.errors?.length) throw new Error(`AniList ${year} p${page}: ${data.errors[0].message}`);
   const media = data.data?.Page?.media || [];
   await writeCache(cacheName, media);
   await sleep(1200);
   return media;
+}
+
+async function fetchAniListYear(year) {
+  const collected = [];
+  for (let page = 1; page <= 3; page += 1) {
+    const media = await fetchAniListPage(year, page);
+    collected.push(...media);
+    const usable = collected.filter((entry) => !blocklistIds.has(String(entry.id)));
+    if (usable.length >= perYear || media.length < perYear) break;
+  }
+  return collected
+    .filter((entry) => !blocklistIds.has(String(entry.id)))
+    .slice(0, perYear);
 }
 
 /* ------------------------------------------------------------------ */
@@ -603,6 +633,7 @@ function applyDouban(item, payload) {
 
 async function main() {
   log(`[build] years=${years.join(',')} perYear=${perYear}`);
+  await loadBlocklist();
   const legacy = await loadLegacy();
   const bangumi = await loadBangumiData();
 

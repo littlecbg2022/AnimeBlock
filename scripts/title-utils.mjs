@@ -1,5 +1,27 @@
 const CHINESE_NUMBERS = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
 
+const TITLE_OVERRIDES = new Map([
+  ['162983', '不死少女的杀人闹剧'],
+  ['106918', '君主·埃尔梅罗二世事件簿 魔眼收集列车 Grace note'],
+  ['97769', '结城友奈是勇者 勇者之章'],
+  ['19363', '银之匙 第二季'],
+  ['6377', '忏·再见绝望先生'],
+  ['3228', '俗·再见绝望先生'],
+  ['124395', '宇崎学妹想要玩！ 第二季'],
+  ['109261', '五等分的新娘 第二季'],
+  ['120209', '转生恶役只好拔除破灭旗标X'],
+  ['112124', '期待在地下城邂逅有错吗 第三季'],
+  ['101167', '期待在地下城邂逅有错吗 第二季'],
+  ['21180', '路人女主的养成方法 第二季'],
+  ['20996', '银魂 第三季'],
+  ['20801', '元气少女缘结神 第二季'],
+  ['20448', '妄想学生会 第二季'],
+  ['12403', '摇曳百合 第二季'],
+  ['146065', '无职转生 第二季 ～到了异世界就拿出真本事～'],
+  ['178789', '无职转生 第三季 ～到了异世界就拿出真本事～'],
+]);
+
+
 function toChineseNumber(value) {
   const number = Number(value);
   if (!Number.isFinite(number) || number <= 0) return String(value);
@@ -59,6 +81,8 @@ export function fixChineseTitles(groups) {
   const all = groups.flatMap((group) => group.items);
 
   for (const item of all) {
+    const override = TITLE_OVERRIDES.get(String(item.id));
+    item.zh = override || String(item.zh || '').replace(/[-－—–]+$/u, '').trim();
     item.zh = alignChineseSeason(item);
   }
 

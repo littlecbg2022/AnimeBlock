@@ -16,6 +16,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { fixChineseTitles } from './title-utils.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const CACHE_DIR = path.join(ROOT, 'scripts', '.cache');
@@ -682,9 +683,10 @@ async function main() {
     log(`[anilist] ${year}: ${items.length} titles`);
   }
 
+  fixChineseTitles(catalogYears);
+
   if (!skipBilibili) {
-    const targets = catalogYears.flatMap((group) => group.items).filter((item) => item.bilibiliId);
-    log(`[bilibili] enriching ${targets.length} titles`);
+    const targets = catalogYears.flatMap((group) => group.items).filter((item) => item.bilibiliId);    log(`[bilibili] enriching ${targets.length} titles`);
     let done = 0;
     for (const item of targets) {
       const payload = await fetchBilibili(item.bilibiliId);

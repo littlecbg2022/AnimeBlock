@@ -16,6 +16,7 @@ import {
   isMachineSummary,
 } from '@/lib/catalog';
 import { getSearchTitles } from '@/lib/search';
+import { buildWatchUrl, WATCH_SOURCES } from '@/lib/watch-sources';
 import { formatInt, formatScore } from '@/lib/format';
 import { useDialog } from '@/lib/use-dialog';
 
@@ -25,6 +26,7 @@ interface DetailSheetProps {
   isWatched: boolean;
   onClose: () => void;
   onToggle: (id: string) => void;
+  onPlay: (anime: Anime) => void;
   onExternal: (url: string) => void;
 }
 
@@ -34,6 +36,7 @@ export function DetailSheet({
   isWatched,
   onClose,
   onToggle,
+  onPlay,
   onExternal,
 }: DetailSheetProps) {
   const t = messages[lang];
@@ -82,40 +85,21 @@ export function DetailSheet({
       ? 'zh'
       : 'ja';
 
-  const qZh = anime ? encodeURIComponent(anime.zh) : '';
-  const qEn = anime ? encodeURIComponent(anime.en || anime.zh) : '';
   const searchTitles = anime ? getSearchTitles(anime, lang) : null;
-  const agedmQuery = searchTitles
-    ? Array.from(searchTitles.base).length <= 8
-      ? searchTitles.base
-      : searchTitles.short
-    : '';
-  const omofunQuery = searchTitles?.base || '';
 
-  const thirdPartyWatchLinks = anime
-    ? [
-        {
-          label: t.watchAgedm,
-          url: `https://www.agedm.io/search?query=${encodeURIComponent(agedmQuery)}`,
-        },
-        {
-          label: t.watchOmofuna,
-          url: `https://www.omofuna.com/search/-------------.html?wd=${encodeURIComponent(omofunQuery)}`,
-        },
-        {
-          label: t.watchAnime1,
-          url: `https://anime1.me/?s=${encodeURIComponent(anime?.zh || omofunQuery)}`,
-        },
-        {
-          label: t.watchYinghua,
-          url: `https://www.yinghuadmm.com/search/-------------.html?wd=${encodeURIComponent(anime?.zh || omofunQuery)}`,
-        },
-        {
-          label: t.watchFengche,
-          url: `https://www.dm530.in/search?q=${encodeURIComponent(anime?.zh || omofunQuery)}`,
-        },
-      ]
+  const watchLinks = anime
+    ? WATCH_SOURCES.map((source) => {
+        const label = t[source.labelKey as keyof typeof t];
+        return {
+          ...source,
+          label: typeof label === 'string' ? label : source.id,
+          url: buildWatchUrl(source, anime, lang),
+        };
+      })
     : [];
+  const thirdPartyWatchLinks = watchLinks.filter((link) => link.group === 'thirdParty');
+  const officialFreeWatchLinks = watchLinks.filter((link) => link.group === 'officialFree');
+  const paidWatchLinks = watchLinks.filter((link) => link.group === 'paid');
 
   const searchVariants =
     anime && searchTitles
@@ -138,60 +122,6 @@ export function DetailSheet({
           },
         ]
       : [];
-
-  const officialFreeWatchLinks = anime
-    ? [
-        {
-          label: t.watchYoutube,
-          url: `https://www.youtube.com/results?search_query=${qEn}+anime+official`,
-        },
-        {
-          label: t.watchMuseAsia,
-          url: `https://www.youtube.com/@MuseAsia/search?query=${qEn}`,
-        },
-        {
-          label: t.watchAniOne,
-          url: `https://www.youtube.com/@AniOneAsia/search?query=${qEn}`,
-        },
-        {
-          label: t.watchCrunchyroll,
-          url: `https://www.crunchyroll.com/search?q=${qEn}`,
-        },
-        {
-          label: t.watchTubi,
-          url: `https://tubitv.com/search/${qEn}`,
-        },
-      ]
-    : [];
-
-  const paidWatchLinks = anime
-    ? [
-        {
-          label: t.watchBilibili,
-          url: `https://search.bilibili.com/bangumi?keyword=${qZh}`,
-        },
-        {
-          label: t.watchIqiyi,
-          url: `https://so.iqiyi.com/so/q_${qZh}`,
-        },
-        {
-          label: t.watchYouku,
-          url: `https://so.youku.com/search_video/q_${qZh}`,
-        },
-        {
-          label: t.watchTencent,
-          url: `https://v.qq.com/x/search/?q=${qZh}`,
-        },
-        {
-          label: t.watchNetflix,
-          url: `https://www.netflix.com/search?q=${qEn}`,
-        },
-        {
-          label: t.watchWeb,
-          url: `https://www.bing.com/search?q=${encodeURIComponent(`${anime.zh} ${anime.en} 在线观看 正版`)}`,
-        },
-      ]
-    : [];
 
   return (
     <dialog
@@ -331,6 +261,10 @@ export function DetailSheet({
                 )}
                 {isWatched ? t.unmarkWatched : t.markWatched}
               </button>
+              <button type="button" className="btn btn-ghost" onClick={() => onPlay(anime)}>
+                <PlayCircle size={16} aria-hidden="true" />
+                {t.play}
+              </button>
             </div>
           )}
 
@@ -350,7 +284,7 @@ export function DetailSheet({
               <div className="watch-grid">
                 {thirdPartyWatchLinks.map((link) => (
                   <button
-                    key={link.label}
+                    key={link.id}
                     type="button"
                     className="source-link third-link"
                     onClick={() => onExternal(link.url)}
@@ -386,7 +320,7 @@ export function DetailSheet({
               <div className="watch-grid">
                 {officialFreeWatchLinks.map((link) => (
                   <button
-                    key={link.label}
+                    key={link.id}
                     type="button"
                     className="source-link"
                     onClick={() => onExternal(link.url)}
@@ -403,7 +337,7 @@ export function DetailSheet({
               <div className="watch-grid">
                 {paidWatchLinks.map((link) => (
                   <button
-                    key={link.label}
+                    key={link.id}
                     type="button"
                     className="source-link"
                     onClick={() => onExternal(link.url)}

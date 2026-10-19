@@ -1,0 +1,104 @@
+{
+  "thirdParty": [
+    {
+      "id": "agedm",
+      "labelKey": "watchAgedm",
+      "url": "https://www.agedm.io/search?query={query}",
+      "query": "baseShort"
+    },
+    {
+      "id": "omofuna",
+      "labelKey": "watchOmofuna",
+      "url": "https://www.omofuna.com/search/-------------.html?wd={query}",
+      "query": "base"
+    },
+    {
+      "id": "anime1",
+      "labelKey": "watchAnime1",
+      "url": "https://anime1.me/?s={query}",
+      "query": "zh"
+    },
+    {
+      "id": "yinghua",
+      "labelKey": "watchYinghua",
+      "url": "https://www.yinghuadmm.com/search/-------------.html?wd={query}",
+      "query": "zh"
+    },
+    {
+      "id": "fengche",
+      "labelKey": "watchFengche",
+      "url": "https://www.dm530.in/search?q={query}",
+      "query": "zh"
+    }
+  ],
+  "officialFree": [
+    {
+      "id": "youtube",
+      "labelKey": "watchYoutube",
+      "url": "https://www.youtube.com/results?search_query={query}+anime+official",
+      "query": "en"
+    },
+    {
+      "id": "museasia",
+      "labelKey": "watchMuseAsia",
+      "url": "https://www.youtube.com/@MuseAsia/search?query={query}",
+      "query": "en"
+    },
+    {
+      "id": "anione",
+      "labelKey": "watchAniOne",
+      "url": "https://www.youtube.com/@AniOneAsia/search?query={query}",
+      "query": "en"
+    },
+    {
+      "id": "crunchyroll",
+      "labelKey": "watchCrunchyroll",
+      "url": "https://www.crunchyroll.com/search?q={query}",
+      "query": "en"
+    },
+    {
+      "id": "tubi",
+      "labelKey": "watchTubi",
+      "url": "https://tubitv.com/search/{query}",
+      "query": "en"
+    }
+  ],
+  "paid": [
+    {
+      "id": "bilibili",
+      "labelKey": "watchBilibili",
+      "url": "https://search.bilibili.com/bangumi?keyword={query}",
+      "query": "zh"
+    },
+    {
+      "id": "iqiyi",
+      "labelKey": "watchIqiyi",
+      "url": "https://so.iqiyi.com/so/q_{query}",
+      "query": "zh"
+    },
+    {
+      "id": "youku",
+      "labelKey": "watchYouku",
+      "url": "https://so.youku.com/search_video/q_{query}",
+      "query": "zh"
+    },
+    {
+      "id": "tencent",
+      "labelKey": "watchTencent",
+      "url": "https://v.qq.com/x/search/?q={query}",
+      "query": "zh"
+    },
+    {
+      "id": "netflix",
+      "labelKey": "watchNetflix",
+      "url": "https://www.netflix.com/search?q={query}",
+      "query": "en"
+    },
+    {
+      "id": "web",
+      "labelKey": "watchWeb",
+      "url": "https://www.bing.com/search?q={query}",
+      "query": "web"
+    }
+  ]
+}

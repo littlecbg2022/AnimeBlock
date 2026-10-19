@@ -13,7 +13,6 @@ import type { Anime, CatalogYear, Language } from '@/lib/types';
 import { useWatchlist } from '@/lib/watchlist';
 import { DetailSheet } from './detail-sheet';
 import { ExternalLinkDialog } from './external-link-dialog';
-import { PlaybackSheet } from './playback-sheet';
 import { MicroInteractions } from './micro-interactions';
 import { OverviewPlate } from './overview-plate';
 import { PreviewCard } from './preview-card';
@@ -159,7 +158,6 @@ export function Archive() {
   const [sortMode, setSortMode] = useState<SortMode>('rating');
   const [preview, setPreview] = useState<Anime | null>(null);
   const [selected, setSelected] = useState<Anime | null>(null);
-  const [player, setPlayer] = useState<Anime | null>(null);
   const [radarOpen, setRadarOpen] = useState(false);
   const [radarSeed, setRadarSeed] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -259,10 +257,6 @@ export function Archive() {
     setSelected(anime);
   }, []);
   const handleToggle = useCallback((id: string) => toggle(id), [toggle]);
-  const handlePlay = useCallback((anime: Anime) => {
-    setSelected(null);
-    setPlayer(anime);
-  }, []);
 
   const handleRandom = useCallback(() => {
     const pick = pickRandomAnime(watched, allAnime);
@@ -536,11 +530,8 @@ export function Archive() {
         isWatched={selected ? watched.has(selected.id) : false}
         onClose={() => setSelected(null)}
         onToggle={handleToggle}
-        onPlay={handlePlay}
         onExternal={handleExternal}
       />
-
-      <PlaybackSheet key={player?.id || 'closed'} anime={player} lang={lang} onClose={() => setPlayer(null)} />
 
       <RadarSheet
         open={radarOpen}

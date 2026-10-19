@@ -26,7 +26,6 @@ interface DetailSheetProps {
   isWatched: boolean;
   onClose: () => void;
   onToggle: (id: string) => void;
-  onPlay: (anime: Anime) => void;
   onExternal: (url: string) => void;
 }
 
@@ -36,7 +35,6 @@ export function DetailSheet({
   isWatched,
   onClose,
   onToggle,
-  onPlay,
   onExternal,
 }: DetailSheetProps) {
   const t = messages[lang];
@@ -260,10 +258,6 @@ export function DetailSheet({
                   <Eye size={16} aria-hidden="true" />
                 )}
                 {isWatched ? t.unmarkWatched : t.markWatched}
-              </button>
-              <button type="button" className="btn btn-ghost" onClick={() => onPlay(anime)}>
-                <PlayCircle size={16} aria-hidden="true" />
-                {t.play}
               </button>
             </div>
           )}

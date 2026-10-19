@@ -80,25 +80,6 @@ export interface Messages {
   watchOfficialFreeTitle: string;
   watchOfficialFreeNote: string;
   watchPaidTitle: string;
-  play: string;
-  playKicker: string;
-  playTitle: string;
-  playIntro: string;
-  playLocal: string;
-  playLocalHint: string;
-  playUrl: string;
-  playUrlPlaceholder: string;
-  playAdd: string;
-  playChange: string;
-  playClear: string;
-  playResume: string;
-  playInvalid: string;
-  playUnsupported: string;
-  playLegal: string;
-  playOpenSource: string;
-  playNoSource: string;
-  playLocalOnly: string;
-  playEmbedNote: string;
   watchAgedm: string;
   watchOmofuna: string;
   watchAnime1: string;
@@ -253,25 +234,6 @@ const zh: Messages = {
   watchOfficialFreeTitle: '官方免费（可能锁区）',
   watchOfficialFreeNote: '官方免费 / 广告支持渠道，部分地区不可用。',
   watchPaidTitle: '正版平台',
-  play: '播放',
-  playKicker: 'PLAYER / LOCAL & EMBED',
-  playTitle: '播放',
-  playIntro: '这里只播放你提供的本地文件、直链或官方嵌入，不解析第三方资源站视频。',
-  playLocal: '选择本地文件',
-  playLocalHint: '视频不会上传，只在当前页面播放。',
-  playUrl: '自定义播放源',
-  playUrlPlaceholder: '粘贴 MP4/WebM 直链，或 YouTube / Bilibili / Vimeo 视频页',
-  playAdd: '添加并播放',
-  playChange: '更换来源',
-  playClear: '清除来源',
-  playResume: '已从上次位置继续',
-  playInvalid: '链接格式不正确。',
-  playUnsupported: '不支持该链接；请使用 MP4/WebM 直链或官方视频页。',
-  playLegal: '播放器不会解析或代理第三方资源站视频；仅播放本地文件、你拥有权限的直链或官方嵌入。',
-  playOpenSource: '打开原页面',
-  playNoSource: '还没有播放源',
-  playLocalOnly: '本地文件不会保存到浏览器，刷新后需重新选择。',
-  playEmbedNote: '官方嵌入播放；部分内容需要登录或会员。',
   watchAgedm: 'AGE 动漫',
   watchOmofuna: 'OmoFun',
   watchAnime1: 'Anime1',
@@ -422,25 +384,6 @@ const en: Messages = {
   watchOfficialFreeTitle: 'Official free (region-locked)',
   watchOfficialFreeNote: 'Official free / ad-supported channels; availability varies by region.',
   watchPaidTitle: 'Official platforms',
-  play: 'Play',
-  playKicker: 'PLAYER / LOCAL & EMBED',
-  playTitle: 'Playback',
-  playIntro: 'This player only opens local files, direct links, or official embeds. It does not parse third-party streaming sites.',
-  playLocal: 'Choose local file',
-  playLocalHint: 'The video is not uploaded; it plays only in this tab.',
-  playUrl: 'Custom playback source',
-  playUrlPlaceholder: 'Paste an MP4/WebM link or a YouTube / Bilibili / Vimeo video page',
-  playAdd: 'Add and play',
-  playChange: 'Change source',
-  playClear: 'Clear source',
-  playResume: 'Resumed from your last position',
-  playInvalid: 'That link is not valid.',
-  playUnsupported: 'Unsupported link. Use an MP4/WebM direct link or an official video page.',
-  playLegal: 'The player never parses or proxies third-party streaming sites. It only plays local files, links you are allowed to use, or official embeds.',
-  playOpenSource: 'Open original',
-  playNoSource: 'No playback source yet',
-  playLocalOnly: 'Local files are not stored in the browser; choose them again after a refresh.',
-  playEmbedNote: 'Official embed. Some titles require sign-in or a subscription.',
   watchAgedm: 'AGE Anime',
   watchOmofuna: 'OmoFun',
   watchAnime1: 'Anime1',
@@ -590,25 +533,6 @@ const ja: Messages = {
   watchOfficialFreeTitle: '公式無料（地域制限あり）',
   watchOfficialFreeNote: '公式の無料 / 広告付き配信。地域によって利用できない場合があります。',
   watchPaidTitle: '公式配信',
-  play: '再生',
-  playKicker: 'PLAYER / LOCAL & EMBED',
-  playTitle: '再生',
-  playIntro: 'ローカルファイル、直リンク、公式埋め込みのみ再生します。第三者の配信サイトは解析しません。',
-  playLocal: 'ローカルファイルを選択',
-  playLocalHint: '動画はアップロードされず、このタブ内だけで再生されます。',
-  playUrl: 'カスタム再生ソース',
-  playUrlPlaceholder: 'MP4/WebM の直リンク、または YouTube / Bilibili / Vimeo の動画ページ',
-  playAdd: '追加して再生',
-  playChange: 'ソースを変更',
-  playClear: 'ソースを削除',
-  playResume: '前回の位置から再開しました',
-  playInvalid: 'リンクの形式が正しくありません。',
-  playUnsupported: '未対応のリンクです。MP4/WebM の直リンクか公式動画ページを使ってください。',
-  playLegal: '第三者配信サイトの解析・プロキシは行いません。ローカルファイル、利用権のある直リンク、公式埋め込みのみ再生します。',
-  playOpenSource: '元ページを開く',
-  playNoSource: '再生ソースがまだありません',
-  playLocalOnly: 'ローカルファイルはブラウザに保存されません。更新後は再選択が必要です。',
-  playEmbedNote: '公式埋め込みです。ログインや会員登録が必要な場合があります。',
   watchAgedm: 'AGE アニメ',
   watchOmofuna: 'OmoFun',
   watchAnime1: 'Anime1',
